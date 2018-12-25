@@ -115,7 +115,6 @@ namespace Doomroulette
                    {
                        try
                        {
-                           //using (FileStream file = System.IO.File.Create(inputfilepath))
                            using (FileStream file = System.IO.File.Create(destination))
                            {
                                file.Write(fileData.Result, 0, fileData.Result.Length);
@@ -376,12 +375,12 @@ namespace Doomroulette
             return db.getAdditionalWads();
         }
 
-        public void addAdditionalWad(AdditionalWad additionalWad)
+        public long addAdditionalWad(AdditionalWad additionalWad)
         {
-            db.addAdditionalWad(additionalWad);
+            return db.addAdditionalWad(additionalWad);
         }
 
-        public void deleteAdditionalWad(int id)
+        public void deleteAdditionalWad(long id)
         {
             db.deleteAdditionalWad(id);
         }
