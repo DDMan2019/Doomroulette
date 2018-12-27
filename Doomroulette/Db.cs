@@ -67,7 +67,7 @@ namespace Doomroulette
 
                 string additionalWads = @"CREATE TABLE `AdditionalWads` (
 	                                        `id` INTEGER PRIMARY KEY AUTOINCREMENT,
-                                            `filename`  INTEGER
+                                            `filename` INTEGER
                                         );";
 
                 sqlite_cmd.CommandText = cachedDatatable;
@@ -80,8 +80,9 @@ namespace Doomroulette
                 sqlite_cmd.ExecuteNonQuery();
                 sqlite_cmd.CommandText = additionalWads;
                 sqlite_cmd.ExecuteNonQuery();
-
+                sqlite_conn.Close();
             }
+            
         }
 
         public void saveWadInfo(WadInfo[] wads)
@@ -128,6 +129,7 @@ namespace Doomroulette
 
         public int getWadCount()
         {
+            int n = 0;
             using (SQLiteConnection connect = new SQLiteConnection(connectionString))
             {
                 connect.Open();
@@ -137,36 +139,14 @@ namespace Doomroulette
                     SQLiteDataReader r = fmd.ExecuteReader();
                     while (r.Read())
                     {
-                        return Convert.ToInt32(r["count"]);
+                        n = Convert.ToInt32(r["count"]);
                     }
+                   
                 }
-                return 0;
+                connect.Close();
             }
-        }
 
-        public int[] getExcludedIds(string[] directoriesToInclude, double minimumrating)
-        {
-            for(int i = 0; i < directoriesToInclude.Length; i++)
-            {
-                directoriesToInclude[i] = string.Format("'{0}'",directoriesToInclude[i]);
-            }
-            string strDirectoriesToInclude = string.Join(",", directoriesToInclude);
-
-            List<int> wadidsToExclude = new List<int>();
-            using (SQLiteConnection connect = new SQLiteConnection(connectionString))
-            {
-                connect.Open();
-                using (SQLiteCommand fmd = connect.CreateCommand())
-                {
-                    fmd.CommandText = @"select id from CachedWadInfo where dir NOT IN ("+ strDirectoriesToInclude + ") OR rating <= "+ minimumrating + ";";
-                    SQLiteDataReader r = fmd.ExecuteReader();
-                    while (r.Read())
-                    {
-                        wadidsToExclude.Add(Convert.ToInt32(r["id"]));
-                    }
-                }
-            }
-            return wadidsToExclude.ToArray();
+            return n;
         }
 
         public int[] getAlreadyPlayedIds()
@@ -184,6 +164,7 @@ namespace Doomroulette
                         wadids.Add(Convert.ToInt32(r["wadId"]));
                     }
                 }
+                connect.Close();
             }
             return wadids.ToArray();
         }
@@ -222,10 +203,14 @@ namespace Doomroulette
                 {
                     if(createdDate == null)
                     {
-                        fmd.CommandText = string.Format(@"SELECT * FROM CachedWadInfo WHERE dir IN ({0}) AND rating >= {1} ", strDirectoriesToInclude, minimumRating);
-                    } else {
-                        fmd.CommandText = string.Format(@"SELECT * FROM CachedWadInfo WHERE dir IN ({0}) AND rating >= {1} AND date >= '{2}'", strDirectoriesToInclude, minimumRating, createdDate);
+                        fmd.CommandText = string.Format(@"SELECT * FROM CachedWadInfo WHERE dir IN ({0}) AND rating >= @minimumRating ", strDirectoriesToInclude);
                     }
+                    else {
+                        fmd.CommandText = string.Format(@"SELECT * FROM CachedWadInfo WHERE dir IN ({0}) AND rating >= @minimumRating AND date >= @createdDate", strDirectoriesToInclude);
+                        fmd.Parameters.AddWithValue("@createdDate", createdDate);
+                    }
+                    fmd.Parameters.AddWithValue("@minimumRating", minimumRating);
+
                     SQLiteDataReader content = fmd.ExecuteReader();
                     while (content.Read())
                     {
@@ -257,20 +242,24 @@ namespace Doomroulette
                         });
                     }
                 }
-                
+                connect.Close();
             }
             return foundWadInfos.ToArray();
         }
 
         public WadInfo getWadInfo(int id)
         {
-            WadInfo foundWadInfo;
+            string query = "Select * from CachedWadInfo where id = @id";
+
+            WadInfo foundWadInfo = new WadInfo();
             using (SQLiteConnection connect = new SQLiteConnection(connectionString))
             {
                 connect.Open();
                 using (SQLiteCommand fmd = connect.CreateCommand())
                 {
-                    fmd.CommandText = @"Select * from CachedWadInfo where id = " + id;
+                    fmd.CommandText = query;
+                    fmd.Parameters.AddWithValue("@id", id);
+
                     SQLiteDataReader content = fmd.ExecuteReader();
                     while (content.Read())
                     {
@@ -300,47 +289,74 @@ namespace Doomroulette
                                 _base = Convert.ToString(content["_base"])
                             }
                         };
-                        return foundWadInfo;
+                        
                     }
                 }
-                return null;
+                connect.Close();
             }
+            return foundWadInfo;
         }
 
         public void saveWadId(int id)
         {
+            string query = "INSERT INTO DownloadedWadIds (wadId, date) VALUES (@id, @datetime);";
+
             SQLiteConnection sqlite_conn =
-                new SQLiteConnection(connectionString);
+                 new SQLiteConnection(connectionString);
             sqlite_conn.Open();
-            SQLiteCommand sqlite_cmd = sqlite_conn.CreateCommand();
 
-            sqlite_cmd.CommandText = "INSERT INTO DownloadedWadIds (wadId, date) VALUES (" + id + ", '" + DateTime.Now.ToString() + "');";
-
-            sqlite_cmd.ExecuteNonQuery();
+            using (var cmd = new SQLiteCommand(sqlite_conn))
+            using (var transaction = sqlite_conn.BeginTransaction())
+            {
+                cmd.CommandText = query;
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@datetime", DateTime.Now.ToString());
+                cmd.ExecuteNonQuery();
+                transaction.Commit();
+            }
+            sqlite_conn.Close();
         }
 
         public void saveLikedWadId(int id)
         {
+            string query = "INSERT INTO LikedWadIds(wadInfoID, date) VALUES(@id, @datetime);";
+
             SQLiteConnection sqlite_conn =
-                new SQLiteConnection(connectionString);
+                 new SQLiteConnection(connectionString);
             sqlite_conn.Open();
-            SQLiteCommand sqlite_cmd = sqlite_conn.CreateCommand();
 
-            sqlite_cmd.CommandText = "INSERT INTO LikedWadIds (wadInfoID, date) VALUES (" + id + ", '" + DateTime.Now.ToString() + "');";
+            using (var cmd = new SQLiteCommand(sqlite_conn))
+            using (var transaction = sqlite_conn.BeginTransaction())
+            {
+                cmd.CommandText = query;
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@datetime", DateTime.Now.ToString());
+                cmd.ExecuteNonQuery();
+                transaction.Commit();
 
-            sqlite_cmd.ExecuteNonQuery();
+            }
+            sqlite_conn.Close();
         }
 
         public void saveDislikedWadId(int id)
         {
+            string query = "INSERT INTO DislikedWadIds(wadInfoID, date) VALUES(@id, @datetime);";
+
             SQLiteConnection sqlite_conn =
                 new SQLiteConnection(connectionString);
             sqlite_conn.Open();
-            SQLiteCommand sqlite_cmd = sqlite_conn.CreateCommand();
 
-            sqlite_cmd.CommandText = "INSERT INTO DislikedWadIds (wadInfoID, date) VALUES (" + id + ", '" + DateTime.Now.ToString() + "');";
+            using (var cmd = new SQLiteCommand(sqlite_conn))
+            using (var transaction = sqlite_conn.BeginTransaction())
+            {
+                cmd.CommandText = query;
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@datetime", DateTime.Now.ToString());
+                cmd.ExecuteNonQuery();
+                transaction.Commit();
 
-            sqlite_cmd.ExecuteNonQuery();
+            }
+            sqlite_conn.Close();
         }
 
         public AdditionalWad[] getAdditionalWads()
@@ -351,11 +367,11 @@ namespace Doomroulette
                 connect.Open();
                 using (SQLiteCommand fmd = connect.CreateCommand())
                 {
-                    fmd.CommandText = @"select id,filename  from AdditionalWads";
+                    fmd.CommandText = @"select id,filename from AdditionalWads";
                     SQLiteDataReader content = fmd.ExecuteReader();
                     while (content.Read())
                     {
-                        var test = content.GetString(1);
+                        var test = content.GetInt32(0);
                         foundWads.Add(new AdditionalWad()
                         {
                             ID = content.GetInt32(0),
@@ -364,31 +380,51 @@ namespace Doomroulette
                         });
                     }
                 }
-                
+                connect.Close();
             }
             return foundWads.ToArray();
         }
 
-        public void addAdditionalWad(AdditionalWad additionalWad)
+        public long addAdditionalWad(AdditionalWad additionalWad)
         {
-            SQLiteConnection sqlite_conn = new SQLiteConnection(connectionString);
+            SQLiteConnection sqlite_conn =
+                new SQLiteConnection(connectionString);
             sqlite_conn.Open();
-            SQLiteCommand sqlite_cmd = sqlite_conn.CreateCommand();
 
-            sqlite_cmd.CommandText = string.Format("INSERT INTO `AdditionalWads`(`id`,`filename`) VALUES (NULL,'{0}');",additionalWad.filename);
+            long insertedId = -1;
+            string query = "INSERT INTO `AdditionalWads` (`id`,`filename`) VALUES (NULL,@filename);";
 
-            sqlite_cmd.ExecuteNonQuery();
+            using (var cmd = new SQLiteCommand(sqlite_conn))
+            using (var transaction = sqlite_conn.BeginTransaction())
+            {
+                cmd.CommandText = query;
+                cmd.Parameters.AddWithValue("@filename", additionalWad.filename);
+                cmd.ExecuteNonQuery();
+                transaction.Commit();
+
+                cmd.CommandText = "SELECT last_insert_rowid()";
+                insertedId = (long)cmd.ExecuteScalar();
+            }
+            sqlite_conn.Close();
+            return insertedId;
         }
 
-        public void deleteAdditionalWad(int id)
+        public void deleteAdditionalWad(long id)
         {
-            SQLiteConnection sqlite_conn = new SQLiteConnection(connectionString);
+            SQLiteConnection sqlite_conn =
+                new SQLiteConnection(connectionString);
             sqlite_conn.Open();
-            SQLiteCommand sqlite_cmd = sqlite_conn.CreateCommand();
 
-            sqlite_cmd.CommandText = string.Format("DELETE FROM `AdditionalWads` WHERE id = {0};",id);
-
-            sqlite_cmd.ExecuteNonQuery();
+            string query = "DELETE FROM `AdditionalWads` WHERE id = @id";
+            using (var cmd = new SQLiteCommand(sqlite_conn))
+            using (var transaction = sqlite_conn.BeginTransaction())
+            {
+                cmd.CommandText = query;
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.ExecuteNonQuery();
+                transaction.Commit();
+            }
+            sqlite_conn.Close();
         }
 
         public WadInfo[] getLikedWads()
@@ -403,7 +439,6 @@ namespace Doomroulette
                     SQLiteDataReader content = fmd.ExecuteReader();
                     while (content.Read())
                     {
-                        
                         foundWadInfos.Add(new WadInfo()
                         {
                             content = new Content()
@@ -432,7 +467,9 @@ namespace Doomroulette
                         });
                     }
                 }
-                
+                connect.Close();
+
+
             }
             return foundWadInfos.ToArray();
         }
@@ -445,7 +482,7 @@ namespace Doomroulette
                 connect.Open();
                 using (SQLiteCommand fmd = connect.CreateCommand())
                 {
-                    fmd.CommandText = @"select * from CachedWadInfo join DislikedWadIds on DislikedWadIds.wadInfoID = CachedWadInfo.id"; // + id;
+                    fmd.CommandText = @"select * from CachedWadInfo join DislikedWadIds on DislikedWadIds.wadInfoID = CachedWadInfo.id";
                     SQLiteDataReader content = fmd.ExecuteReader();
                     while (content.Read())
                     {
@@ -477,9 +514,11 @@ namespace Doomroulette
                             }
                         });
                     }
+                    
                 }
-                return foundWadInfos.ToArray();
+                connect.Close();
             }
+            return foundWadInfos.ToArray();
         }
 
 

@@ -30,9 +30,9 @@ namespace Doomroulette
         public frmMain()
         {
             InitializeComponent();
-
+            
             wadManager = new WadManager();
-
+            
             if (wadManager.missingExecutablePath())
             {
                 openSettingsDialog(willShowcontrolbox: false);
@@ -41,6 +41,7 @@ namespace Doomroulette
             populateSettings();
             populateHistoryList();
             populateAdditionalWadList();
+            
         }
 
         private void openSettingsDialog(bool willShowcontrolbox = true)
@@ -529,13 +530,14 @@ namespace Doomroulette
                 string result = openFileDialog.FileName;
                 AdditionalWad newWad = new AdditionalWad()
                 {
-                    ID = additionalWads.Count > 0 ? additionalWads[additionalWads.Count - 1].ID + 1 : 0,
+                    ID = 0,
                     filename = result,
                     name = Path.GetFileNameWithoutExtension(result)
                 };
 
+                long returnedId = wadManager.addAdditionalWad(newWad);
+                newWad.ID = returnedId;
                 additionalWads.Add(newWad);
-                wadManager.addAdditionalWad(newWad);
                 lstAdditionalWads.Items.Add(newWad.name);
                 
             }
@@ -549,6 +551,7 @@ namespace Doomroulette
                 AdditionalWad toRemove = additionalWads[selectedIndex];
                 wadManager.deleteAdditionalWad(toRemove.ID);
                 lstAdditionalWads.Items.RemoveAt(selectedIndex);
+                additionalWads.RemoveAt(selectedIndex);
             }
         }
     }
