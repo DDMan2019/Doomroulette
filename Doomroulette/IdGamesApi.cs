@@ -95,7 +95,6 @@ namespace Doomroulette
 
         public static WadInfo[] getContents(string name)
         {
-            //levels/doom/megawads/
             string action = String.Format("?action=getfiles&name={0}&out=json", name);
             List<WadInfo> foundWads = new List<WadInfo>();
             using (var webClient = new WebClient())
@@ -114,6 +113,7 @@ namespace Doomroulette
                             content = new Content()
                             {
                                 id = (int)content["id"],
+                                wadId = (int)content["id"],
                                 title = (string)content["title"],
                                 dir = (string)content["dir"],
                                 filename = (string)content["filename"],

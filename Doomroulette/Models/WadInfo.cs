@@ -15,6 +15,7 @@ namespace Doomroulette.Models
     public class Content
     {
         public int id { get; set; }
+        public int wadId { get; set; }
         public string title { get; set; }
         public string dir { get; set; }
         public string filename { get; set; }

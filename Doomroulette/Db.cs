@@ -187,7 +187,7 @@ namespace Doomroulette
             return wadids.ToArray();
         }
 
-        public WadInfo[] getWadList(string[] directoriesToInclude, double minimumRating, string createdDate)
+        public WadInfo[] getWadList(string[] directoriesToInclude, double minimumRating = 0, string createdDate = null)
         {
             for (int i = 0; i < directoriesToInclude.Length; i++)
             {
@@ -219,6 +219,7 @@ namespace Doomroulette
                             content = new Content()
                             {
                                 id = Convert.ToInt32(content["id"]),
+                                wadId = Convert.ToInt32(content["wadId"]),
                                 title = Convert.ToString(content["title"]),
                                 dir = Convert.ToString(content["dir"]),
                                 filename = Convert.ToString(content["filename"]),
