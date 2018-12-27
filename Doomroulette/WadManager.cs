@@ -265,8 +265,7 @@ namespace Doomroulette
             }
 
             int[] alreadyPlayedIds = db.getAlreadyPlayedIds();
-            //int[] excludeIds = db.getExcludedIds(directories.ToArray(), minimumRating);
-
+            
             WadInfo[] foundWads = db.getWadList(directories.ToArray(), settings.minimumRating, settings.createdDate);
             int[] foundWadIds = foundWads.Where(a => !alreadyPlayedIds.Contains(a.content.id)).Select(i => i.content.id).ToArray();
             
