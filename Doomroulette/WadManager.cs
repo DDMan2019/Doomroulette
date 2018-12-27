@@ -348,7 +348,12 @@ namespace Doomroulette
             };
 
             WadInfo[] wads = IdGamesApi.getWads(directories.ToArray());
-            db.saveWadInfo(wads);
+            int[] cachedWadIds = db.getWadList(directories.ToArray()).Select(a => a.content.wadId).ToArray();
+
+            var wadsToAdd = wads.Where(a => !cachedWadIds.Contains(a.content.wadId)).ToArray();
+
+            if (wadsToAdd.Any())
+                db.saveWadInfo(wadsToAdd);
         }
 
         public void setWadRating(int wadId,bool liked)

@@ -121,18 +121,12 @@ namespace Doomroulette
 
         private void refreshWadInfoList()
         {
-            SetText("Downloading cache from Doomworld /idgames database. \nPlease wait... ");
-            this.Invoke((MethodInvoker)delegate {
-                btnPlay.Enabled = false;
-                btnRunPrevious.Enabled = false;
-            });
-           
             wadManager.updateWadInfoList();
-
             this.Invoke((MethodInvoker)delegate {
                 btnPlay.Enabled = true;
                 btnRunPrevious.Enabled = true;
             });
+
             SetText("Ready...");
 
         }
@@ -464,12 +458,19 @@ namespace Doomroulette
         {
             if (wadManager.emptyDb())
             {
+                SetText("Downloading cache from Doomworld /idgames database. \nPlease wait... ");
+                this.Invoke((MethodInvoker)delegate {
+                    btnPlay.Enabled = false;
+                    btnRunPrevious.Enabled = false;
+                });
+
                 willDownloadNewWad = false;
-                this.randomWadThread =
+            }
+
+            this.randomWadThread =
                    new Thread(new ThreadStart(refreshWadInfoList));
 
-                this.randomWadThread.Start();
-            }
+            this.randomWadThread.Start();
         }
 
         private void frmMain_FormClosed(object sender, FormClosedEventArgs e)
