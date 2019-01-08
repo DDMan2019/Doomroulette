@@ -63,6 +63,16 @@ namespace Doomroulette.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap baseline_delete_black_18dp {
+            get {
+                object obj = ResourceManager.GetObject("baseline_delete_black_18dp", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap ic_thumb_down_3x {
             get {
                 object obj = ResourceManager.GetObject("ic_thumb_down_3x", resourceCulture);

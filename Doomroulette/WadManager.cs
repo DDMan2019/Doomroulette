@@ -374,6 +374,37 @@ namespace Doomroulette
             return db.getDisLikedWads();
         }
 
+        public void deleteLikedWad(WadInfo wadInfo, bool deleteFile = true)
+        {
+            long wadIdToDelete = wadInfo.content.id;
+            db.deleteLikedWad(wadIdToDelete);
+            if(deleteFile)
+            {
+                string folderToDelete = Path.GetFileNameWithoutExtension(wadInfo.content.filename);
+                if (Directory.Exists(downloadedWadsFolder + "/" + folderToDelete))
+                {
+                    Directory.Delete(downloadedWadsFolder + "/" + folderToDelete, true);
+                }
+                System.IO.File.Delete(downloadedWadsFolder + "/" + wadInfo.content.filename);
+            }
+        }
+
+        public void deleteDislikedWad(WadInfo wadInfo, bool deleteFile = true)
+        {
+            long wadIdToDelete = wadInfo.content.id;
+            db.deleteDislikedWad(wadIdToDelete);
+            if(deleteFile)
+            {
+                string folderToDelete = Path.GetFileNameWithoutExtension(wadInfo.content.filename);
+                if (Directory.Exists(downloadedWadsFolder + "/" + folderToDelete))
+                {
+                    Directory.Delete(downloadedWadsFolder + "/" + folderToDelete, true);
+                }
+                System.IO.File.Delete(downloadedWadsFolder + "/" + wadInfo.content.filename);
+
+            }
+        }
+
         public AdditionalWad[] getAdditionalWads()
         {
             return db.getAdditionalWads();

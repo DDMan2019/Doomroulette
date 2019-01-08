@@ -436,7 +436,7 @@ namespace Doomroulette
                 connect.Open();
                 using (SQLiteCommand fmd = connect.CreateCommand())
                 {
-                    fmd.CommandText = @"select * from CachedWadInfo join LikedWadIds on LikedWadIds.wadInfoID = CachedWadInfo.id";
+                    fmd.CommandText = @"select * from CachedWadInfo join LikedWadIds on LikedWadIds.wadInfoID = CachedWadInfo.id order by title asc";
                     SQLiteDataReader content = fmd.ExecuteReader();
                     while (content.Read())
                     {
@@ -483,7 +483,7 @@ namespace Doomroulette
                 connect.Open();
                 using (SQLiteCommand fmd = connect.CreateCommand())
                 {
-                    fmd.CommandText = @"select * from CachedWadInfo join DislikedWadIds on DislikedWadIds.wadInfoID = CachedWadInfo.id";
+                    fmd.CommandText = @"select * from CachedWadInfo join DislikedWadIds on DislikedWadIds.wadInfoID = CachedWadInfo.id order by title asc";
                     SQLiteDataReader content = fmd.ExecuteReader();
                     while (content.Read())
                     {
@@ -520,6 +520,42 @@ namespace Doomroulette
                 connect.Close();
             }
             return foundWadInfos.ToArray();
+        }
+
+        public void deleteLikedWad(long wadInfoID)
+        {
+            SQLiteConnection sqlite_conn =
+            new SQLiteConnection(connectionString);
+            sqlite_conn.Open();
+
+            string query = "DELETE FROM `LikedWadIds` WHERE wadInfoID = @wadInfoID";
+            using (var cmd = new SQLiteCommand(sqlite_conn))
+            using (var transaction = sqlite_conn.BeginTransaction())
+            {
+                cmd.CommandText = query;
+                cmd.Parameters.AddWithValue("@wadInfoID", wadInfoID);
+                cmd.ExecuteNonQuery();
+                transaction.Commit();
+            }
+            sqlite_conn.Close();
+        }
+
+        public void deleteDislikedWad(long wadInfoID)
+        {
+            SQLiteConnection sqlite_conn =
+                new SQLiteConnection(connectionString);
+            sqlite_conn.Open();
+
+            string query = "DELETE FROM `DislikedWadIds` WHERE wadInfoID = @wadInfoID";
+            using (var cmd = new SQLiteCommand(sqlite_conn))
+            using (var transaction = sqlite_conn.BeginTransaction())
+            {
+                cmd.CommandText = query;
+                cmd.Parameters.AddWithValue("@wadInfoID", wadInfoID);
+                cmd.ExecuteNonQuery();
+                transaction.Commit();
+            }
+            sqlite_conn.Close();
         }
 
 
