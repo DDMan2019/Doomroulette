@@ -73,6 +73,7 @@
     </Compile>
     <Compile Include="Models\AdditionalWad.cs" />
     <Compile Include="Models\File.cs" />
+    <Compile Include="Models\WadHistoryList.cs" />
     <Compile Include="Models\WadInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -89,6 +90,9 @@
       <DependentUpon>Settings.cs</DependentUpon>
     </Compile>
     <Compile Include="WadManager.cs" />
+    <EmbeddedResource Include="Main.resx">
+      <DependentUpon>Main.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -116,6 +120,7 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="Icon.ico" />
+    <None Include="Resources\baseline_delete_black_18dp.png" />
     <Content Include="Resources\ic_thumb_down_3x.png" />
     <Content Include="Resources\ic_thumb_up_3x.png" />
   </ItemGroup>

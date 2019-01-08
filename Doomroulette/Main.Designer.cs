@@ -57,12 +57,21 @@
             this.radioDoom2 = new System.Windows.Forms.RadioButton();
             this.radioFreedoom2 = new System.Windows.Forms.RadioButton();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.btnDelete = new System.Windows.Forms.Button();
+            this.btnMoveRight = new System.Windows.Forms.Button();
+            this.btnMoveLeft = new System.Windows.Forms.Button();
             this.btnShowInfo = new System.Windows.Forms.Button();
             this.btnPlayselected = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.btnPlayrandomDisliked = new System.Windows.Forms.Button();
+            this.btnNextDislikedwads = new System.Windows.Forms.Button();
             this.listDislikedWads = new System.Windows.Forms.ListBox();
+            this.btnPrevDislikedwads = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.listLikedWads = new System.Windows.Forms.ListBox();
+            this.btnPlayrandomLiked = new System.Windows.Forms.Button();
+            this.btnPrevLikedwads = new System.Windows.Forms.Button();
+            this.btnNextLikedwads = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numMinrating)).BeginInit();
@@ -195,7 +204,7 @@
             this.groupBox2.TabIndex = 10;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Settings";
-            this.groupBox2.Enter += new System.EventHandler(this.groupBox2_Enter);
+            
             // 
             // chkEnableDate
             // 
@@ -387,6 +396,9 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.btnDelete);
+            this.tabPage2.Controls.Add(this.btnMoveRight);
+            this.tabPage2.Controls.Add(this.btnMoveLeft);
             this.tabPage2.Controls.Add(this.btnShowInfo);
             this.tabPage2.Controls.Add(this.btnPlayselected);
             this.tabPage2.Controls.Add(this.groupBox4);
@@ -399,9 +411,45 @@
             this.tabPage2.Text = "History";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // btnDelete
+            // 
+            this.btnDelete.Image = global::Doomroulette.Properties.Resources.baseline_delete_black_18dp;
+            this.btnDelete.Location = new System.Drawing.Point(364, 225);
+            this.btnDelete.MaximumSize = new System.Drawing.Size(30, 30);
+            this.btnDelete.MinimumSize = new System.Drawing.Size(30, 30);
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(30, 30);
+            this.btnDelete.TabIndex = 9;
+            this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            // 
+            // btnMoveRight
+            // 
+            this.btnMoveRight.Location = new System.Drawing.Point(364, 189);
+            this.btnMoveRight.MaximumSize = new System.Drawing.Size(30, 30);
+            this.btnMoveRight.MinimumSize = new System.Drawing.Size(30, 30);
+            this.btnMoveRight.Name = "btnMoveRight";
+            this.btnMoveRight.Size = new System.Drawing.Size(30, 30);
+            this.btnMoveRight.TabIndex = 8;
+            this.btnMoveRight.Text = ">";
+            this.btnMoveRight.UseVisualStyleBackColor = true;
+            this.btnMoveRight.Click += new System.EventHandler(this.btnMoveRight_Click);
+            // 
+            // btnMoveLeft
+            // 
+            this.btnMoveLeft.Location = new System.Drawing.Point(364, 153);
+            this.btnMoveLeft.MaximumSize = new System.Drawing.Size(30, 30);
+            this.btnMoveLeft.MinimumSize = new System.Drawing.Size(30, 30);
+            this.btnMoveLeft.Name = "btnMoveLeft";
+            this.btnMoveLeft.Size = new System.Drawing.Size(30, 30);
+            this.btnMoveLeft.TabIndex = 7;
+            this.btnMoveLeft.Text = "<";
+            this.btnMoveLeft.UseVisualStyleBackColor = true;
+            this.btnMoveLeft.Click += new System.EventHandler(this.btnMoveLeft_Click);
+            // 
             // btnShowInfo
             // 
-            this.btnShowInfo.Location = new System.Drawing.Point(272, 421);
+            this.btnShowInfo.Location = new System.Drawing.Point(306, 457);
             this.btnShowInfo.Name = "btnShowInfo";
             this.btnShowInfo.Size = new System.Drawing.Size(158, 29);
             this.btnShowInfo.TabIndex = 3;
@@ -411,23 +459,47 @@
             // 
             // btnPlayselected
             // 
-            this.btnPlayselected.Location = new System.Drawing.Point(272, 368);
+            this.btnPlayselected.Location = new System.Drawing.Point(306, 404);
             this.btnPlayselected.Name = "btnPlayselected";
             this.btnPlayselected.Size = new System.Drawing.Size(158, 47);
             this.btnPlayselected.TabIndex = 2;
             this.btnPlayselected.Text = "Play selected Wad";
             this.btnPlayselected.UseVisualStyleBackColor = true;
-            this.btnPlayselected.Click += new System.EventHandler(this.button2_Click);
+            this.btnPlayselected.Click += new System.EventHandler(this.btnPlayselected_Click);
             // 
             // groupBox4
             // 
+            this.groupBox4.Controls.Add(this.btnPlayrandomDisliked);
+            this.groupBox4.Controls.Add(this.btnNextDislikedwads);
             this.groupBox4.Controls.Add(this.listDislikedWads);
-            this.groupBox4.Location = new System.Drawing.Point(374, 60);
+            this.groupBox4.Controls.Add(this.btnPrevDislikedwads);
+            this.groupBox4.Location = new System.Drawing.Point(421, 60);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(292, 287);
+            this.groupBox4.Size = new System.Drawing.Size(290, 323);
             this.groupBox4.TabIndex = 1;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Disliked Wads";
+            
+            // 
+            // btnPlayrandomDisliked
+            // 
+            this.btnPlayrandomDisliked.Location = new System.Drawing.Point(87, 288);
+            this.btnPlayrandomDisliked.Name = "btnPlayrandomDisliked";
+            this.btnPlayrandomDisliked.Size = new System.Drawing.Size(110, 30);
+            this.btnPlayrandomDisliked.TabIndex = 12;
+            this.btnPlayrandomDisliked.Text = "Play random";
+            this.btnPlayrandomDisliked.UseVisualStyleBackColor = true;
+            this.btnPlayrandomDisliked.Click += new System.EventHandler(this.btnPlayrandomDisliked_Click);
+            // 
+            // btnNextDislikedwads
+            // 
+            this.btnNextDislikedwads.Location = new System.Drawing.Point(203, 288);
+            this.btnNextDislikedwads.Name = "btnNextDislikedwads";
+            this.btnNextDislikedwads.Size = new System.Drawing.Size(30, 30);
+            this.btnNextDislikedwads.TabIndex = 11;
+            this.btnNextDislikedwads.Text = ">";
+            this.btnNextDislikedwads.UseVisualStyleBackColor = true;
+            this.btnNextDislikedwads.Click += new System.EventHandler(this.btnNextDislikedwads_Click);
             // 
             // listDislikedWads
             // 
@@ -439,15 +511,30 @@
             this.listDislikedWads.TabIndex = 0;
             this.listDislikedWads.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listDislikedWads_MouseClick);
             // 
+            // btnPrevDislikedwads
+            // 
+            this.btnPrevDislikedwads.Location = new System.Drawing.Point(51, 288);
+            this.btnPrevDislikedwads.Name = "btnPrevDislikedwads";
+            this.btnPrevDislikedwads.Size = new System.Drawing.Size(30, 30);
+            this.btnPrevDislikedwads.TabIndex = 10;
+            this.btnPrevDislikedwads.Text = "<";
+            this.btnPrevDislikedwads.UseVisualStyleBackColor = true;
+            this.btnPrevDislikedwads.Click += new System.EventHandler(this.btnPrevDislikedwads_Click);
+            // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.listLikedWads);
-            this.groupBox3.Location = new System.Drawing.Point(19, 60);
+            this.groupBox3.Controls.Add(this.btnPlayrandomLiked);
+            this.groupBox3.Controls.Add(this.btnPrevLikedwads);
+            this.groupBox3.Controls.Add(this.btnNextLikedwads);
+            this.groupBox3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.groupBox3.Location = new System.Drawing.Point(47, 60);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(293, 287);
+            this.groupBox3.Size = new System.Drawing.Size(290, 323);
             this.groupBox3.TabIndex = 0;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Liked wads";
+            
             // 
             // listLikedWads
             // 
@@ -458,6 +545,36 @@
             this.listLikedWads.Size = new System.Drawing.Size(280, 260);
             this.listLikedWads.TabIndex = 0;
             this.listLikedWads.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listLikedWads_MouseClick);
+            // 
+            // btnPlayrandomLiked
+            // 
+            this.btnPlayrandomLiked.Location = new System.Drawing.Point(87, 288);
+            this.btnPlayrandomLiked.Name = "btnPlayrandomLiked";
+            this.btnPlayrandomLiked.Size = new System.Drawing.Size(110, 30);
+            this.btnPlayrandomLiked.TabIndex = 6;
+            this.btnPlayrandomLiked.Text = "Play random";
+            this.btnPlayrandomLiked.UseVisualStyleBackColor = true;
+            this.btnPlayrandomLiked.Click += new System.EventHandler(this.btnPlayrandomLiked_Click);
+            // 
+            // btnPrevLikedwads
+            // 
+            this.btnPrevLikedwads.Location = new System.Drawing.Point(51, 288);
+            this.btnPrevLikedwads.Name = "btnPrevLikedwads";
+            this.btnPrevLikedwads.Size = new System.Drawing.Size(30, 30);
+            this.btnPrevLikedwads.TabIndex = 4;
+            this.btnPrevLikedwads.Text = "<";
+            this.btnPrevLikedwads.UseVisualStyleBackColor = true;
+            this.btnPrevLikedwads.Click += new System.EventHandler(this.btnPrevLikedwads_Click);
+            // 
+            // btnNextLikedwads
+            // 
+            this.btnNextLikedwads.Location = new System.Drawing.Point(203, 288);
+            this.btnNextLikedwads.Name = "btnNextLikedwads";
+            this.btnNextLikedwads.Size = new System.Drawing.Size(30, 30);
+            this.btnNextLikedwads.TabIndex = 5;
+            this.btnNextLikedwads.Text = ">";
+            this.btnNextLikedwads.UseVisualStyleBackColor = true;
+            this.btnNextLikedwads.Click += new System.EventHandler(this.btnNextLikedwads_Click);
             // 
             // frmMain
             // 
@@ -526,6 +643,15 @@
         private System.Windows.Forms.Button btnRemoveWad;
         private System.Windows.Forms.Button btnAddWad;
         private System.Windows.Forms.ListBox lstAdditionalWads;
+        private System.Windows.Forms.Button btnDelete;
+        private System.Windows.Forms.Button btnMoveRight;
+        private System.Windows.Forms.Button btnMoveLeft;
+        private System.Windows.Forms.Button btnPlayrandomLiked;
+        private System.Windows.Forms.Button btnNextLikedwads;
+        private System.Windows.Forms.Button btnPrevLikedwads;
+        private System.Windows.Forms.Button btnPlayrandomDisliked;
+        private System.Windows.Forms.Button btnNextDislikedwads;
+        private System.Windows.Forms.Button btnPrevDislikedwads;
     }
 }
 

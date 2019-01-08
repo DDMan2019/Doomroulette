@@ -22,8 +22,10 @@ namespace Doomroulette
         private bool willDownloadNewWad = true;
         private Thread randomWadThread = null;
         delegate void StringArgReturningVoidDelegate(string text);
-        private WadInfo[] likedWads;
-        private WadInfo[] dislikedWads;
+        
+        private WadHistoryList likedWads;
+        private WadHistoryList dislikedWads;
+
         private WadManager wadManager;
         private List<AdditionalWad> additionalWads;
 
@@ -67,12 +69,60 @@ namespace Doomroulette
             listDislikedWads.Items.Clear();
             if (!wadManager.emptyDb())
             {
-                likedWads = wadManager.getLikedWads();
-                dislikedWads = wadManager.getDislikedWads();
+                if(likedWads == null)
+                {
+                    likedWads = new WadHistoryList(wadManager.getLikedWads());
+                }
+                if (dislikedWads == null)
+                {
+                    dislikedWads = new WadHistoryList(wadManager.getDislikedWads());
+                }
 
-                listLikedWads.Items.AddRange(likedWads.Select(a => a.content.title).ToArray());
-                listDislikedWads.Items.AddRange(dislikedWads.Select(a => a.content.title).ToArray());
+                if(likedWads.wads == null)
+                {
+                    likedWads.setWads(wadManager.getLikedWads());
+                }
+                if (dislikedWads.wads == null)
+                {
+                    dislikedWads.setWads(wadManager.getDislikedWads());
+                }
+
+                listLikedWads.Items.AddRange(likedWads.currentShownItems.Select(a => a.content.title).ToArray());
+                listDislikedWads.Items.AddRange(dislikedWads.currentShownItems.Select(a => a.content.title).ToArray());
+
             }
+        }
+
+        private void refreshHistoryList()
+        {
+            likedWads.wads = null;
+            dislikedWads.wads = null;
+            populateHistoryList();
+        }
+
+        private void btnPrevLikedwads_Click(object sender, EventArgs e)
+        {
+            likedWads.previous();
+            populateHistoryList();
+        }
+
+        private void btnNextLikedwads_Click(object sender, EventArgs e)
+        {
+            likedWads.next();
+            populateHistoryList();
+        }
+
+
+        private void btnPrevDislikedwads_Click(object sender, EventArgs e)
+        {
+            dislikedWads.previous();
+            populateHistoryList();
+        }
+
+        private void btnNextDislikedwads_Click(object sender, EventArgs e)
+        {
+            dislikedWads.next();
+            populateHistoryList();
         }
 
         private void populateSettings()
@@ -121,7 +171,13 @@ namespace Doomroulette
 
         private void refreshWadInfoList()
         {
-            wadManager.updateWadInfoList();
+            try
+            {
+                wadManager.updateWadInfoList();
+            } catch (Exception e)
+            {
+
+            }
             this.Invoke((MethodInvoker)delegate {
                 btnPlay.Enabled = true;
                 btnRunPrevious.Enabled = true;
@@ -210,8 +266,9 @@ namespace Doomroulette
                             return;
 
                         wadManager.setWadRating(chosenWad.content.id, wadrating.rating == RatingTypes.Liked);
-                        populateHistoryList();
 
+                        refreshHistoryList();
+                        
                     });
                 }
                 else
@@ -383,44 +440,70 @@ namespace Doomroulette
             bool enableCreatedDate = Settings.configValues.ContainsKey("enableCreatedDate") ? Settings.configValues["enableCreatedDate"] == "True" : false;
             createdDate.Enabled = enableCreatedDate;
             chkEnableDate.Checked = enableCreatedDate;
-
-
         }
-
-        private void groupBox2_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button2_Click(object sender, EventArgs e)
+        
+        private void btnPlayselected_Click(object sender, EventArgs e)
         {
             int selectedIndex = -1;
             WadInfo chosenWad;
             string currentFile = "";
-            if(listLikedWads.SelectedIndex != -1)
+            if (listLikedWads.SelectedIndex != -1)
             {
                 selectedIndex = listLikedWads.SelectedIndex;
-                chosenWad = likedWads[selectedIndex];
+                chosenWad = likedWads.currentShownItems[selectedIndex];
                 currentFile = Path.GetFileNameWithoutExtension(chosenWad.content.filename);
                 wadManager.currentFile = currentFile;
 
-            } else if(listDislikedWads.SelectedIndex != -1){
+            }
+            else if (listDislikedWads.SelectedIndex != -1)
+            {
 
                 selectedIndex = listDislikedWads.SelectedIndex;
-                chosenWad = dislikedWads[selectedIndex];
+                chosenWad = dislikedWads.currentShownItems[selectedIndex];
                 currentFile = Path.GetFileNameWithoutExtension(chosenWad.content.filename);
                 wadManager.currentFile = currentFile;
-                
+
             }
-            
-            if(selectedIndex != -1)
+
+            if (selectedIndex != -1)
             {
                 string[] files = wadManager.getFiles(wadManager.downloadedWadsFolder + "/" + currentFile);
                 wadManager.startDoom(Path.GetFileNameWithoutExtension(wadManager.currentFile), files, additionalWads.ToArray());
             }
-            
+
+
         }
 
+        private void btnPlayrandomLiked_Click(object sender, EventArgs e)
+        {
+            if (likedWads.wads.Length == 0) return;
+            int selectedIndex = new Random().Next(0,likedWads.wads.Length);
+            WadInfo chosenWad;
+            string currentFile = "";
+
+            chosenWad = likedWads.wads[selectedIndex];
+            currentFile = Path.GetFileNameWithoutExtension(chosenWad.content.filename);
+            wadManager.currentFile = currentFile;
+
+            string[] files = wadManager.getFiles(wadManager.downloadedWadsFolder + "/" + currentFile);
+            wadManager.startDoom(Path.GetFileNameWithoutExtension(wadManager.currentFile), files, additionalWads.ToArray());
+        }
+
+        private void btnPlayrandomDisliked_Click(object sender, EventArgs e)
+        {
+            if (dislikedWads.wads.Length == 0) return;
+            int selectedIndex = new Random().Next(0, dislikedWads.wads.Length);
+            WadInfo chosenWad;
+            string currentFile = "";
+
+            chosenWad = dislikedWads.wads[selectedIndex];
+            currentFile = Path.GetFileNameWithoutExtension(chosenWad.content.filename);
+            wadManager.currentFile = currentFile;
+
+            string[] files = wadManager.getFiles(wadManager.downloadedWadsFolder + "/" + currentFile);
+            wadManager.startDoom(Path.GetFileNameWithoutExtension(wadManager.currentFile), files, additionalWads.ToArray());
+        }
+        
         private void btnAdvancedSettings_Click(object sender, EventArgs e)
         {
             openSettingsDialog();
@@ -499,7 +582,7 @@ namespace Doomroulette
             int selectedIndex = isLikedWad ? listLikedWads.SelectedIndex : listDislikedWads.SelectedIndex;
             if(selectedIndex != -1)
             {
-                WadInfo selectedWad = isLikedWad ? likedWads[selectedIndex] : dislikedWads[selectedIndex];
+                WadInfo selectedWad = isLikedWad ? likedWads.currentShownItems[selectedIndex] : dislikedWads.currentShownItems[selectedIndex];
                 try
                 {
                     wadManager.openTextFile(selectedWad);
@@ -553,6 +636,51 @@ namespace Doomroulette
                 wadManager.deleteAdditionalWad(toRemove.ID);
                 lstAdditionalWads.Items.RemoveAt(selectedIndex);
                 additionalWads.RemoveAt(selectedIndex);
+            }
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            bool isLikedWad = listLikedWads.SelectedIndex != -1 ? true : false;
+            int selectedIndex = isLikedWad ? listLikedWads.SelectedIndex : listDislikedWads.SelectedIndex;
+            if (selectedIndex < 0) return;
+
+            WadInfo wadToDelete;
+            if (isLikedWad)
+            {
+                wadToDelete = likedWads.currentShownItems[selectedIndex];
+                wadManager.deleteLikedWad(wadToDelete);
+            } else
+            {
+                wadToDelete = dislikedWads.currentShownItems[selectedIndex];
+                wadManager.deleteDislikedWad(wadToDelete);
+            }
+            refreshHistoryList();
+        }
+
+        private void btnMoveLeft_Click(object sender, EventArgs e)
+        {
+            bool isDislikedWad = listDislikedWads.SelectedIndex != -1 ? true : false;
+            int selectedIndex = listDislikedWads.SelectedIndex;
+            if(selectedIndex > -1)
+            {
+                WadInfo wadInfo = dislikedWads.currentShownItems[selectedIndex];
+                wadManager.deleteDislikedWad(wadInfo, false);
+                wadManager.setWadRating(wadInfo.content.id, true);
+                refreshHistoryList();
+            }
+        }
+
+        private void btnMoveRight_Click(object sender, EventArgs e)
+        {
+            bool isDislikedWad = listLikedWads.SelectedIndex != -1 ? true : false;
+            int selectedIndex = listLikedWads.SelectedIndex;
+            if (selectedIndex > -1)
+            {
+                WadInfo wadInfo = likedWads.currentShownItems[selectedIndex];
+                wadManager.deleteLikedWad(wadInfo, false);
+                wadManager.setWadRating(wadInfo.content.id, false);
+                refreshHistoryList();
             }
         }
     }
