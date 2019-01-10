@@ -269,7 +269,7 @@ namespace Doomroulette
             WadInfo[] foundWads = db.getWadList(directories.ToArray(), settings.minimumRating, settings.createdDate);
             int[] foundWadIds = foundWads.Where(a => !alreadyPlayedIds.Contains(a.content.id)).Select(i => i.content.id).ToArray();
             
-            int nWads = foundWads.Length;
+            int nWads = foundWadIds.Length;
             if (nWads == 0) 
             {
                 throw new Exception("No wads found!");
