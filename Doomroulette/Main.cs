@@ -67,16 +67,17 @@ namespace Doomroulette
         {
             listLikedWads.Items.Clear();
             listDislikedWads.Items.Clear();
+            if (likedWads == null)
+            {
+                likedWads = new WadHistoryList(wadManager.getLikedWads());
+            }
+            if (dislikedWads == null)
+            {
+                dislikedWads = new WadHistoryList(wadManager.getDislikedWads());
+            }
             if (!wadManager.emptyDb())
             {
-                if(likedWads == null)
-                {
-                    likedWads = new WadHistoryList(wadManager.getLikedWads());
-                }
-                if (dislikedWads == null)
-                {
-                    dislikedWads = new WadHistoryList(wadManager.getDislikedWads());
-                }
+               
 
                 if(likedWads.wads == null)
                 {
@@ -178,11 +179,7 @@ namespace Doomroulette
             {
 
             }
-            this.Invoke((MethodInvoker)delegate {
-                btnPlay.Enabled = true;
-                btnRunPrevious.Enabled = true;
-            });
-
+            enableButtons();
             SetText("Ready...");
 
         }
@@ -314,6 +311,43 @@ namespace Doomroulette
             {
                 this.btnPlay.Enabled = true;
             }
+
+            //---
+            if (this.btnPlayrandomLiked.InvokeRequired)
+            {
+                BeginInvoke((Action)delegate () { this.btnPlayrandomLiked.Enabled = true; });
+            }
+            else
+            {
+                this.btnPlayrandomLiked.Enabled = true;
+            }
+
+            if (this.btnPlayrandomDisliked.InvokeRequired)
+            {
+                BeginInvoke((Action)delegate () { this.btnPlayrandomDisliked.Enabled = true; });
+            }
+            else
+            {
+                this.btnPlayrandomDisliked.Enabled = true;
+            }
+
+            if (this.btnPlayselected.InvokeRequired)
+            {
+                BeginInvoke((Action)delegate () { this.btnPlayselected.Enabled = true; });
+            }
+            else
+            {
+                this.btnPlayselected.Enabled = true;
+            }
+
+            if (this.btnShowInfo.InvokeRequired)
+            {
+                BeginInvoke((Action)delegate () { this.btnShowInfo.Enabled = true; });
+            }
+            else
+            {
+                this.btnShowInfo.Enabled = true;
+            }
         }
 
         private void disableButtons()
@@ -335,6 +369,45 @@ namespace Doomroulette
             {
                 this.btnPlay.Enabled = false;
             }
+
+            //--
+
+            if (this.btnPlayrandomLiked.InvokeRequired)
+            {
+                BeginInvoke((Action)delegate () { this.btnPlayrandomLiked.Enabled = false; });
+            }
+            else
+            {
+                this.btnPlayrandomLiked.Enabled = false;
+            }
+
+            if (this.btnPlayrandomDisliked.InvokeRequired)
+            {
+                BeginInvoke((Action)delegate () { this.btnPlayrandomDisliked.Enabled = false; });
+            }
+            else
+            {
+                this.btnPlayrandomDisliked.Enabled = false;
+            }
+
+            if (this.btnPlayselected.InvokeRequired)
+            {
+                BeginInvoke((Action)delegate () { this.btnPlayselected.Enabled = false; });
+            }
+            else
+            {
+                this.btnPlayselected.Enabled = false;
+            }
+
+            if (this.btnShowInfo.InvokeRequired)
+            {
+                BeginInvoke((Action)delegate () { this.btnShowInfo.Enabled = false; });
+            }
+            else
+            {
+                this.btnShowInfo.Enabled = false;
+            }
+
         }
 
         private void SetText(string text)
@@ -475,7 +548,7 @@ namespace Doomroulette
         }
 
         private void btnPlayrandomLiked_Click(object sender, EventArgs e)
-        {
+        {  
             if (likedWads.wads.Length == 0) return;
             int selectedIndex = new Random().Next(0,likedWads.wads.Length);
             WadInfo chosenWad;
@@ -542,11 +615,7 @@ namespace Doomroulette
             if (wadManager.emptyDb())
             {
                 SetText("Downloading cache from Doomworld /idgames database. \nPlease wait... ");
-                this.Invoke((MethodInvoker)delegate {
-                    btnPlay.Enabled = false;
-                    btnRunPrevious.Enabled = false;
-                });
-
+                disableButtons();
                 willDownloadNewWad = false;
             }
 
