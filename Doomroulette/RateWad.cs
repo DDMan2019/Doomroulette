@@ -1,4 +1,5 @@
 ﻿using Doomroulette.Models;
+using MaterialSkin.Controls;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,9 +12,8 @@ using System.Windows.Forms;
 
 namespace Doomroulette
 {
-    public partial class RateWad : Form
+    public partial class RateWad : MaterialForm
     {
-
         public enum RatingTypes { Liked = 1, Disliked = 0, Unrated = -1 };
 
         public RatingTypes rating = RatingTypes.Unrated;

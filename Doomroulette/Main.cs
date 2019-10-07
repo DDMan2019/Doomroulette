@@ -14,10 +14,15 @@ using System.Windows.Forms;
 using System.Threading;
 using static Doomroulette.RateWad;
 using System.Diagnostics;
-
+using MaterialSkin.Controls;
+using MaterialSkin;
+using Doomroulette.Properties;
+/*
+* form size is : 586, 472
+*/
 namespace Doomroulette
 {
-    public partial class frmMain : Form
+    public partial class frmMain : MaterialForm
     {
         private bool willDownloadNewWad = true;
         private Thread randomWadThread = null;
@@ -28,11 +33,17 @@ namespace Doomroulette
 
         private WadManager wadManager;
         private List<AdditionalWad> additionalWads;
+        private readonly MaterialSkinManager materialSkinManager;
 
         public frmMain()
         {
-            InitializeComponent();
+            materialSkinManager = MaterialSkinManager.Instance;
+            materialSkinManager.AddFormToManage(this);
+            materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
+            materialSkinManager.ColorScheme = new ColorScheme(Primary.BlueGrey800, Primary.BlueGrey900, Primary.BlueGrey500, Accent.LightBlue200, TextShade.WHITE);
             
+            InitializeComponent();
+           
             wadManager = new WadManager();
             
             if (wadManager.missingExecutablePath())
