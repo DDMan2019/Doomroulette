@@ -14,12 +14,10 @@ namespace Doomroulette
     
     static class IdGamesApi
     {
-        //https://www.doomworld.com/idgames/api/
-        //ftp://archives.gamers.org/pub/games/doom2/levels/doom2/megawads/
         private static readonly HttpClient client = new HttpClient();
         private static string idUrl = "https://www.doomworld.com/idgames/api/api.php";
         
-
+        /*
         public static WadInfo getWadInfo(int id)
         {
             string action = String.Format("?action=get&id={0}&out=json",id);
@@ -82,6 +80,7 @@ namespace Doomroulette
             }
 
         }
+        */
 
         public static WadInfo[] getWads(string[] directories)
         {

@@ -39,11 +39,10 @@
             this.lblWadInfo.Depth = 0;
             this.lblWadInfo.Font = new System.Drawing.Font("Roboto", 11F);
             this.lblWadInfo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(222)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.lblWadInfo.Location = new System.Drawing.Point(11, 70);
-            this.lblWadInfo.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblWadInfo.Location = new System.Drawing.Point(15, 86);
             this.lblWadInfo.MouseState = MaterialSkin.MouseState.HOVER;
             this.lblWadInfo.Name = "lblWadInfo";
-            this.lblWadInfo.Size = new System.Drawing.Size(350, 72);
+            this.lblWadInfo.Size = new System.Drawing.Size(467, 89);
             this.lblWadInfo.TabIndex = 3;
             this.lblWadInfo.Text = "You have played: Placeholder.wad\nMade by Placeholder.\nCreated yyyy-mm-dd";
             // 
@@ -52,10 +51,10 @@
             this.btnLike.BackColor = System.Drawing.Color.Lime;
             this.btnLike.BackgroundImage = global::Doomroulette.Properties.Resources.ic_thumb_up_3x;
             this.btnLike.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnLike.Location = new System.Drawing.Point(15, 160);
-            this.btnLike.Margin = new System.Windows.Forms.Padding(2);
+            this.btnLike.Location = new System.Drawing.Point(20, 188);
+            this.btnLike.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnLike.Name = "btnLike";
-            this.btnLike.Size = new System.Drawing.Size(98, 106);
+            this.btnLike.Size = new System.Drawing.Size(131, 130);
             this.btnLike.TabIndex = 2;
             this.btnLike.UseVisualStyleBackColor = false;
             this.btnLike.Click += new System.EventHandler(this.btnLike_Click);
@@ -65,25 +64,25 @@
             this.btnDislike.BackColor = System.Drawing.Color.Red;
             this.btnDislike.BackgroundImage = global::Doomroulette.Properties.Resources.ic_thumb_down_3x;
             this.btnDislike.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnDislike.Location = new System.Drawing.Point(263, 160);
-            this.btnDislike.Margin = new System.Windows.Forms.Padding(2);
+            this.btnDislike.Location = new System.Drawing.Point(351, 188);
+            this.btnDislike.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnDislike.Name = "btnDislike";
-            this.btnDislike.Size = new System.Drawing.Size(98, 106);
+            this.btnDislike.Size = new System.Drawing.Size(131, 130);
             this.btnDislike.TabIndex = 1;
             this.btnDislike.UseVisualStyleBackColor = false;
             this.btnDislike.Click += new System.EventHandler(this.btnDislike_Click);
             // 
             // RateWad
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CausesValidation = false;
-            this.ClientSize = new System.Drawing.Size(383, 310);
+            this.ClientSize = new System.Drawing.Size(511, 354);
             this.Controls.Add(this.lblWadInfo);
             this.Controls.Add(this.btnLike);
             this.Controls.Add(this.btnDislike);
             this.Cursor = System.Windows.Forms.Cursors.Default;
-            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "RateWad";

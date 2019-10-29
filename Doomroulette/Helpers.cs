@@ -32,7 +32,7 @@ namespace Doomroulette
                 
             return true;
         }
-
+        /*
         private static readonly PrivateFontCollection privateFontCollection = new PrivateFontCollection();
         [DllImport("gdi32.dll")]
         private static extern IntPtr AddFontMemResourceEx(IntPtr pbFont, uint cbFont, IntPtr pvd, [In] ref uint pcFonts);
@@ -49,7 +49,8 @@ namespace Doomroulette
 
             return privateFontCollection.Families.Last();
         }
-
+        
+        /*
         public static void log(string str)
         {
             try
@@ -73,5 +74,6 @@ namespace Doomroulette
             }
 
         }
+        */
     }
 }

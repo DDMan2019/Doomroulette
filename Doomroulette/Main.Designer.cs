@@ -37,6 +37,7 @@ namespace Doomroulette
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.btnPlay = new System.Windows.Forms.Button();
             this.lblStatus = new MaterialSkin.Controls.MaterialLabel();
             this.radio_sk_baby = new MaterialSkin.Controls.MaterialRadioButton();
@@ -65,21 +66,21 @@ namespace Doomroulette
             this.radioDoom2 = new MaterialSkin.Controls.MaterialRadioButton();
             this.radioFreedoom2 = new MaterialSkin.Controls.MaterialRadioButton();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.btnRateWad = new MaterialSkin.Controls.MaterialRaisedButton();
             this.btnDelete = new MaterialSkin.Controls.MaterialRaisedButton();
-            this.btnMoveRight = new MaterialSkin.Controls.MaterialRaisedButton();
-            this.btnMoveLeft = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.chkFilterUnrated = new MaterialSkin.Controls.MaterialCheckBox();
+            this.chkFilterDisliked = new MaterialSkin.Controls.MaterialCheckBox();
+            this.chkFilterLiked = new MaterialSkin.Controls.MaterialCheckBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.lblPages = new System.Windows.Forms.Label();
+            this.listPlayedWads = new System.Windows.Forms.ListBox();
+            this.btnPlayrandomLiked = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.btnNextWads = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.btnPreviousWads = new MaterialSkin.Controls.MaterialRaisedButton();
             this.btnShowInfo = new MaterialSkin.Controls.MaterialRaisedButton();
             this.btnPlayselected = new MaterialSkin.Controls.MaterialRaisedButton();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.btnPlayrandomDisliked = new MaterialSkin.Controls.MaterialRaisedButton();
-            this.btnNextDislikedwads = new MaterialSkin.Controls.MaterialRaisedButton();
-            this.listDislikedWads = new System.Windows.Forms.ListBox();
-            this.btnPrevDislikedwads = new MaterialSkin.Controls.MaterialRaisedButton();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.listLikedWads = new System.Windows.Forms.ListBox();
-            this.btnPlayrandomLiked = new MaterialSkin.Controls.MaterialRaisedButton();
-            this.btnPrevLikedwads = new MaterialSkin.Controls.MaterialRaisedButton();
-            this.btnNextLikedwads = new MaterialSkin.Controls.MaterialRaisedButton();
             this.materialTabSelector1 = new MaterialSkin.Controls.MaterialTabSelector();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -88,6 +89,7 @@ namespace Doomroulette
             this.tabPage1.SuspendLayout();
             this.grpGames.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.groupBox5.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.SuspendLayout();
@@ -131,7 +133,7 @@ namespace Doomroulette
             this.radio_sk_baby.MouseState = MaterialSkin.MouseState.HOVER;
             this.radio_sk_baby.Name = "radio_sk_baby";
             this.radio_sk_baby.Ripple = true;
-            this.radio_sk_baby.Size = new System.Drawing.Size(184, 30);
+            this.radio_sk_baby.Size = new System.Drawing.Size(181, 30);
             this.radio_sk_baby.TabIndex = 3;
             this.radio_sk_baby.Tag = "sk_baby";
             this.radio_sk_baby.Text = "I\'m too young to die";
@@ -149,7 +151,7 @@ namespace Doomroulette
             this.radio_sk_hard.MouseState = MaterialSkin.MouseState.HOVER;
             this.radio_sk_hard.Name = "radio_sk_hard";
             this.radio_sk_hard.Ripple = true;
-            this.radio_sk_hard.Size = new System.Drawing.Size(142, 30);
+            this.radio_sk_hard.Size = new System.Drawing.Size(139, 30);
             this.radio_sk_hard.TabIndex = 4;
             this.radio_sk_hard.Tag = "sk_hard";
             this.radio_sk_hard.Text = "Ultra-Violence";
@@ -167,7 +169,7 @@ namespace Doomroulette
             this.radio_sk_nightmare.MouseState = MaterialSkin.MouseState.HOVER;
             this.radio_sk_nightmare.Name = "radio_sk_nightmare";
             this.radio_sk_nightmare.Ripple = true;
-            this.radio_sk_nightmare.Size = new System.Drawing.Size(119, 30);
+            this.radio_sk_nightmare.Size = new System.Drawing.Size(116, 30);
             this.radio_sk_nightmare.TabIndex = 5;
             this.radio_sk_nightmare.Tag = "sk_nightmare";
             this.radio_sk_nightmare.Text = "Nightmare!";
@@ -186,7 +188,7 @@ namespace Doomroulette
             this.radio_sk_medium.MouseState = MaterialSkin.MouseState.HOVER;
             this.radio_sk_medium.Name = "radio_sk_medium";
             this.radio_sk_medium.Ripple = true;
-            this.radio_sk_medium.Size = new System.Drawing.Size(146, 30);
+            this.radio_sk_medium.Size = new System.Drawing.Size(143, 30);
             this.radio_sk_medium.TabIndex = 6;
             this.radio_sk_medium.TabStop = true;
             this.radio_sk_medium.Tag = "sk_medium";
@@ -205,7 +207,7 @@ namespace Doomroulette
             this.radio_sk_easy.MouseState = MaterialSkin.MouseState.HOVER;
             this.radio_sk_easy.Name = "radio_sk_easy";
             this.radio_sk_easy.Ripple = true;
-            this.radio_sk_easy.Size = new System.Drawing.Size(174, 30);
+            this.radio_sk_easy.Size = new System.Drawing.Size(171, 30);
             this.radio_sk_easy.TabIndex = 7;
             this.radio_sk_easy.Tag = "sk_easy";
             this.radio_sk_easy.Text = "Hey, not too rough";
@@ -532,11 +534,7 @@ namespace Doomroulette
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.btnDelete);
-            this.tabPage2.Controls.Add(this.btnMoveRight);
-            this.tabPage2.Controls.Add(this.btnMoveLeft);
-            this.tabPage2.Controls.Add(this.btnShowInfo);
-            this.tabPage2.Controls.Add(this.btnPlayselected);
+            this.tabPage2.Controls.Add(this.groupBox5);
             this.tabPage2.Controls.Add(this.groupBox4);
             this.tabPage2.Controls.Add(this.groupBox3);
             this.tabPage2.Location = new System.Drawing.Point(4, 25);
@@ -548,62 +546,213 @@ namespace Doomroulette
             this.tabPage2.Text = "History";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.btnRateWad);
+            this.groupBox5.Controls.Add(this.btnDelete);
+            this.groupBox5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.groupBox5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox5.Location = new System.Drawing.Point(711, 52);
+            this.groupBox5.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.groupBox5.Size = new System.Drawing.Size(175, 489);
+            this.groupBox5.TabIndex = 12;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Misc";
+            // 
+            // btnRateWad
+            // 
+            this.btnRateWad.AutoSize = true;
+            this.btnRateWad.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnRateWad.Depth = 0;
+            this.btnRateWad.Icon = null;
+            this.btnRateWad.Location = new System.Drawing.Point(18, 43);
+            this.btnRateWad.MouseState = MaterialSkin.MouseState.HOVER;
+            this.btnRateWad.Name = "btnRateWad";
+            this.btnRateWad.Primary = true;
+            this.btnRateWad.Size = new System.Drawing.Size(106, 36);
+            this.btnRateWad.TabIndex = 1;
+            this.btnRateWad.Text = "Rate WAd";
+            this.btnRateWad.UseVisualStyleBackColor = true;
+            this.btnRateWad.Click += new System.EventHandler(this.BtnRateWad_Click);
+            // 
             // btnDelete
             // 
             this.btnDelete.AutoSize = true;
             this.btnDelete.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnDelete.Depth = 0;
             this.btnDelete.Icon = null;
-            this.btnDelete.Location = new System.Drawing.Point(429, 224);
-            this.btnDelete.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnDelete.MaximumSize = new System.Drawing.Size(29, 30);
-            this.btnDelete.MinimumSize = new System.Drawing.Size(29, 30);
+            this.btnDelete.Location = new System.Drawing.Point(18, 87);
             this.btnDelete.MouseState = MaterialSkin.MouseState.HOVER;
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Primary = true;
-            this.btnDelete.Size = new System.Drawing.Size(29, 30);
-            this.btnDelete.TabIndex = 10;
-            this.btnDelete.Text = "X";
+            this.btnDelete.Size = new System.Drawing.Size(124, 36);
+            this.btnDelete.TabIndex = 0;
+            this.btnDelete.Text = "Delete wad";
             this.btnDelete.UseVisualStyleBackColor = true;
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
-            // btnMoveRight
+            // groupBox4
             // 
-            this.btnMoveRight.AutoSize = true;
-            this.btnMoveRight.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnMoveRight.Depth = 0;
-            this.btnMoveRight.Icon = null;
-            this.btnMoveRight.Location = new System.Drawing.Point(429, 190);
-            this.btnMoveRight.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnMoveRight.MaximumSize = new System.Drawing.Size(29, 30);
-            this.btnMoveRight.MinimumSize = new System.Drawing.Size(29, 30);
-            this.btnMoveRight.MouseState = MaterialSkin.MouseState.HOVER;
-            this.btnMoveRight.Name = "btnMoveRight";
-            this.btnMoveRight.Primary = true;
-            this.btnMoveRight.Size = new System.Drawing.Size(29, 30);
-            this.btnMoveRight.TabIndex = 8;
-            this.btnMoveRight.Text = ">";
-            this.btnMoveRight.UseVisualStyleBackColor = true;
-            this.btnMoveRight.Click += new System.EventHandler(this.btnMoveRight_Click);
+            this.groupBox4.Controls.Add(this.chkFilterUnrated);
+            this.groupBox4.Controls.Add(this.chkFilterDisliked);
+            this.groupBox4.Controls.Add(this.chkFilterLiked);
+            this.groupBox4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.groupBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox4.Location = new System.Drawing.Point(22, 52);
+            this.groupBox4.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.groupBox4.Size = new System.Drawing.Size(177, 489);
+            this.groupBox4.TabIndex = 11;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Filter";
             // 
-            // btnMoveLeft
+            // chkFilterUnrated
             // 
-            this.btnMoveLeft.AutoSize = true;
-            this.btnMoveLeft.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnMoveLeft.Depth = 0;
-            this.btnMoveLeft.Icon = null;
-            this.btnMoveLeft.Location = new System.Drawing.Point(429, 153);
-            this.btnMoveLeft.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnMoveLeft.MaximumSize = new System.Drawing.Size(29, 30);
-            this.btnMoveLeft.MinimumSize = new System.Drawing.Size(29, 30);
-            this.btnMoveLeft.MouseState = MaterialSkin.MouseState.HOVER;
-            this.btnMoveLeft.Name = "btnMoveLeft";
-            this.btnMoveLeft.Primary = true;
-            this.btnMoveLeft.Size = new System.Drawing.Size(29, 30);
-            this.btnMoveLeft.TabIndex = 7;
-            this.btnMoveLeft.Text = "<";
-            this.btnMoveLeft.UseVisualStyleBackColor = true;
-            this.btnMoveLeft.Click += new System.EventHandler(this.btnMoveLeft_Click);
+            this.chkFilterUnrated.AutoSize = true;
+            this.chkFilterUnrated.Depth = 0;
+            this.chkFilterUnrated.Font = new System.Drawing.Font("Roboto", 10F);
+            this.chkFilterUnrated.Location = new System.Drawing.Point(13, 87);
+            this.chkFilterUnrated.Margin = new System.Windows.Forms.Padding(0);
+            this.chkFilterUnrated.MouseLocation = new System.Drawing.Point(-1, -1);
+            this.chkFilterUnrated.MouseState = MaterialSkin.MouseState.HOVER;
+            this.chkFilterUnrated.Name = "chkFilterUnrated";
+            this.chkFilterUnrated.Ripple = true;
+            this.chkFilterUnrated.Size = new System.Drawing.Size(92, 30);
+            this.chkFilterUnrated.TabIndex = 9;
+            this.chkFilterUnrated.Text = "Unrated";
+            this.chkFilterUnrated.UseVisualStyleBackColor = true;
+            this.chkFilterUnrated.CheckedChanged += new System.EventHandler(this.filterChanged);
+            // 
+            // chkFilterDisliked
+            // 
+            this.chkFilterDisliked.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.chkFilterDisliked.AutoSize = true;
+            this.chkFilterDisliked.Depth = 0;
+            this.chkFilterDisliked.Font = new System.Drawing.Font("Roboto", 10F);
+            this.chkFilterDisliked.Location = new System.Drawing.Point(13, 56);
+            this.chkFilterDisliked.Margin = new System.Windows.Forms.Padding(0);
+            this.chkFilterDisliked.MouseLocation = new System.Drawing.Point(-1, -1);
+            this.chkFilterDisliked.MouseState = MaterialSkin.MouseState.HOVER;
+            this.chkFilterDisliked.Name = "chkFilterDisliked";
+            this.chkFilterDisliked.Ripple = true;
+            this.chkFilterDisliked.Size = new System.Drawing.Size(92, 30);
+            this.chkFilterDisliked.TabIndex = 8;
+            this.chkFilterDisliked.Text = "Disliked";
+            this.chkFilterDisliked.UseVisualStyleBackColor = true;
+            this.chkFilterDisliked.CheckedChanged += new System.EventHandler(this.filterChanged);
+            // 
+            // chkFilterLiked
+            // 
+            this.chkFilterLiked.AutoSize = true;
+            this.chkFilterLiked.Checked = true;
+            this.chkFilterLiked.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkFilterLiked.Depth = 0;
+            this.chkFilterLiked.Font = new System.Drawing.Font("Roboto", 10F);
+            this.chkFilterLiked.Location = new System.Drawing.Point(13, 25);
+            this.chkFilterLiked.Margin = new System.Windows.Forms.Padding(0);
+            this.chkFilterLiked.MouseLocation = new System.Drawing.Point(-1, -1);
+            this.chkFilterLiked.MouseState = MaterialSkin.MouseState.HOVER;
+            this.chkFilterLiked.Name = "chkFilterLiked";
+            this.chkFilterLiked.Ripple = true;
+            this.chkFilterLiked.Size = new System.Drawing.Size(73, 30);
+            this.chkFilterLiked.TabIndex = 7;
+            this.chkFilterLiked.Text = "Liked";
+            this.chkFilterLiked.UseVisualStyleBackColor = true;
+            this.chkFilterLiked.CheckedChanged += new System.EventHandler(this.filterChanged);
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.lblPages);
+            this.groupBox3.Controls.Add(this.listPlayedWads);
+            this.groupBox3.Controls.Add(this.btnPlayrandomLiked);
+            this.groupBox3.Controls.Add(this.btnNextWads);
+            this.groupBox3.Controls.Add(this.btnPreviousWads);
+            this.groupBox3.Controls.Add(this.btnShowInfo);
+            this.groupBox3.Controls.Add(this.btnPlayselected);
+            this.groupBox3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.groupBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox3.Location = new System.Drawing.Point(205, 52);
+            this.groupBox3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.groupBox3.Size = new System.Drawing.Size(500, 489);
+            this.groupBox3.TabIndex = 0;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Played wads";
+            // 
+            // lblPages
+            // 
+            this.lblPages.AutoSize = true;
+            this.lblPages.Location = new System.Drawing.Point(205, 272);
+            this.lblPages.Name = "lblPages";
+            this.lblPages.Size = new System.Drawing.Size(51, 25);
+            this.lblPages.TabIndex = 7;
+            this.lblPages.Text = "0/10";
+            // 
+            // listPlayedWads
+            // 
+            this.listPlayedWads.FormattingEnabled = true;
+            this.listPlayedWads.ItemHeight = 25;
+            this.listPlayedWads.Location = new System.Drawing.Point(7, 33);
+            this.listPlayedWads.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.listPlayedWads.Name = "listPlayedWads";
+            this.listPlayedWads.Size = new System.Drawing.Size(487, 229);
+            this.listPlayedWads.TabIndex = 0;
+            // 
+            // btnPlayrandomLiked
+            // 
+            this.btnPlayrandomLiked.AutoSize = true;
+            this.btnPlayrandomLiked.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnPlayrandomLiked.Depth = 0;
+            this.btnPlayrandomLiked.Icon = null;
+            this.btnPlayrandomLiked.Location = new System.Drawing.Point(175, 332);
+            this.btnPlayrandomLiked.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnPlayrandomLiked.MouseState = MaterialSkin.MouseState.HOVER;
+            this.btnPlayrandomLiked.Name = "btnPlayrandomLiked";
+            this.btnPlayrandomLiked.Primary = true;
+            this.btnPlayrandomLiked.Size = new System.Drawing.Size(141, 36);
+            this.btnPlayrandomLiked.TabIndex = 6;
+            this.btnPlayrandomLiked.Text = "Play random";
+            this.btnPlayrandomLiked.UseVisualStyleBackColor = true;
+            this.btnPlayrandomLiked.Click += new System.EventHandler(this.btnPlayrandomLiked_Click);
+            // 
+            // btnNextWads
+            // 
+            this.btnNextWads.AutoSize = true;
+            this.btnNextWads.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnNextWads.Depth = 0;
+            this.btnNextWads.Icon = null;
+            this.btnNextWads.Location = new System.Drawing.Point(463, 266);
+            this.btnNextWads.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnNextWads.MouseState = MaterialSkin.MouseState.HOVER;
+            this.btnNextWads.Name = "btnNextWads";
+            this.btnNextWads.Primary = true;
+            this.btnNextWads.Size = new System.Drawing.Size(31, 36);
+            this.btnNextWads.TabIndex = 5;
+            this.btnNextWads.Text = ">";
+            this.btnNextWads.UseVisualStyleBackColor = true;
+            this.btnNextWads.Click += new System.EventHandler(this.btnNextLikedwads_Click);
+            // 
+            // btnPreviousWads
+            // 
+            this.btnPreviousWads.AutoSize = true;
+            this.btnPreviousWads.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnPreviousWads.Depth = 0;
+            this.btnPreviousWads.Icon = null;
+            this.btnPreviousWads.Location = new System.Drawing.Point(7, 266);
+            this.btnPreviousWads.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnPreviousWads.MouseState = MaterialSkin.MouseState.HOVER;
+            this.btnPreviousWads.Name = "btnPreviousWads";
+            this.btnPreviousWads.Primary = true;
+            this.btnPreviousWads.Size = new System.Drawing.Size(31, 36);
+            this.btnPreviousWads.TabIndex = 4;
+            this.btnPreviousWads.Text = "<";
+            this.btnPreviousWads.UseVisualStyleBackColor = true;
+            this.btnPreviousWads.Click += new System.EventHandler(this.btnPrevLikedwads_Click);
             // 
             // btnShowInfo
             // 
@@ -611,7 +760,7 @@ namespace Doomroulette
             this.btnShowInfo.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnShowInfo.Depth = 0;
             this.btnShowInfo.Icon = null;
-            this.btnShowInfo.Location = new System.Drawing.Point(383, 521);
+            this.btnShowInfo.Location = new System.Drawing.Point(189, 423);
             this.btnShowInfo.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnShowInfo.MouseState = MaterialSkin.MouseState.HOVER;
             this.btnShowInfo.Name = "btnShowInfo";
@@ -628,7 +777,7 @@ namespace Doomroulette
             this.btnPlayselected.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnPlayselected.Depth = 0;
             this.btnPlayselected.Icon = null;
-            this.btnPlayselected.Location = new System.Drawing.Point(339, 471);
+            this.btnPlayselected.Location = new System.Drawing.Point(147, 378);
             this.btnPlayselected.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnPlayselected.MouseState = MaterialSkin.MouseState.HOVER;
             this.btnPlayselected.Name = "btnPlayselected";
@@ -639,169 +788,12 @@ namespace Doomroulette
             this.btnPlayselected.UseVisualStyleBackColor = true;
             this.btnPlayselected.Click += new System.EventHandler(this.btnPlayselected_Click);
             // 
-            // groupBox4
-            // 
-            this.groupBox4.Controls.Add(this.btnPlayrandomDisliked);
-            this.groupBox4.Controls.Add(this.btnNextDislikedwads);
-            this.groupBox4.Controls.Add(this.listDislikedWads);
-            this.groupBox4.Controls.Add(this.btnPrevDislikedwads);
-            this.groupBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox4.Location = new System.Drawing.Point(487, 60);
-            this.groupBox4.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox4.Size = new System.Drawing.Size(296, 390);
-            this.groupBox4.TabIndex = 1;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Disliked Wads";
-            // 
-            // btnPlayrandomDisliked
-            // 
-            this.btnPlayrandomDisliked.AutoSize = true;
-            this.btnPlayrandomDisliked.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnPlayrandomDisliked.Depth = 0;
-            this.btnPlayrandomDisliked.Icon = null;
-            this.btnPlayrandomDisliked.Location = new System.Drawing.Point(73, 318);
-            this.btnPlayrandomDisliked.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnPlayrandomDisliked.MouseState = MaterialSkin.MouseState.HOVER;
-            this.btnPlayrandomDisliked.Name = "btnPlayrandomDisliked";
-            this.btnPlayrandomDisliked.Primary = true;
-            this.btnPlayrandomDisliked.Size = new System.Drawing.Size(141, 36);
-            this.btnPlayrandomDisliked.TabIndex = 12;
-            this.btnPlayrandomDisliked.Text = "Play random";
-            this.btnPlayrandomDisliked.UseVisualStyleBackColor = true;
-            this.btnPlayrandomDisliked.Click += new System.EventHandler(this.btnPlayrandomDisliked_Click);
-            // 
-            // btnNextDislikedwads
-            // 
-            this.btnNextDislikedwads.AutoSize = true;
-            this.btnNextDislikedwads.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnNextDislikedwads.Depth = 0;
-            this.btnNextDislikedwads.Icon = null;
-            this.btnNextDislikedwads.Location = new System.Drawing.Point(233, 318);
-            this.btnNextDislikedwads.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnNextDislikedwads.MouseState = MaterialSkin.MouseState.HOVER;
-            this.btnNextDislikedwads.Name = "btnNextDislikedwads";
-            this.btnNextDislikedwads.Primary = true;
-            this.btnNextDislikedwads.Size = new System.Drawing.Size(31, 36);
-            this.btnNextDislikedwads.TabIndex = 11;
-            this.btnNextDislikedwads.Text = ">";
-            this.btnNextDislikedwads.UseVisualStyleBackColor = true;
-            this.btnNextDislikedwads.Click += new System.EventHandler(this.btnNextDislikedwads_Click);
-            // 
-            // listDislikedWads
-            // 
-            this.listDislikedWads.FormattingEnabled = true;
-            this.listDislikedWads.ItemHeight = 25;
-            this.listDislikedWads.Location = new System.Drawing.Point(13, 33);
-            this.listDislikedWads.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.listDislikedWads.Name = "listDislikedWads";
-            this.listDislikedWads.Size = new System.Drawing.Size(271, 229);
-            this.listDislikedWads.TabIndex = 0;
-            this.listDislikedWads.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listDislikedWads_MouseClick);
-            // 
-            // btnPrevDislikedwads
-            // 
-            this.btnPrevDislikedwads.AutoSize = true;
-            this.btnPrevDislikedwads.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnPrevDislikedwads.Depth = 0;
-            this.btnPrevDislikedwads.Icon = null;
-            this.btnPrevDislikedwads.Location = new System.Drawing.Point(31, 318);
-            this.btnPrevDislikedwads.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnPrevDislikedwads.MouseState = MaterialSkin.MouseState.HOVER;
-            this.btnPrevDislikedwads.Name = "btnPrevDislikedwads";
-            this.btnPrevDislikedwads.Primary = true;
-            this.btnPrevDislikedwads.Size = new System.Drawing.Size(31, 36);
-            this.btnPrevDislikedwads.TabIndex = 10;
-            this.btnPrevDislikedwads.Text = "<";
-            this.btnPrevDislikedwads.UseVisualStyleBackColor = true;
-            this.btnPrevDislikedwads.Click += new System.EventHandler(this.btnPrevDislikedwads_Click);
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.listLikedWads);
-            this.groupBox3.Controls.Add(this.btnPlayrandomLiked);
-            this.groupBox3.Controls.Add(this.btnPrevLikedwads);
-            this.groupBox3.Controls.Add(this.btnNextLikedwads);
-            this.groupBox3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.groupBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox3.Location = new System.Drawing.Point(112, 60);
-            this.groupBox3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox3.Size = new System.Drawing.Size(291, 390);
-            this.groupBox3.TabIndex = 0;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Liked wads";
-            // 
-            // listLikedWads
-            // 
-            this.listLikedWads.FormattingEnabled = true;
-            this.listLikedWads.ItemHeight = 25;
-            this.listLikedWads.Location = new System.Drawing.Point(7, 33);
-            this.listLikedWads.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.listLikedWads.Name = "listLikedWads";
-            this.listLikedWads.Size = new System.Drawing.Size(271, 229);
-            this.listLikedWads.TabIndex = 0;
-            this.listLikedWads.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listLikedWads_MouseClick);
-            // 
-            // btnPlayrandomLiked
-            // 
-            this.btnPlayrandomLiked.AutoSize = true;
-            this.btnPlayrandomLiked.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnPlayrandomLiked.Depth = 0;
-            this.btnPlayrandomLiked.Icon = null;
-            this.btnPlayrandomLiked.Location = new System.Drawing.Point(65, 315);
-            this.btnPlayrandomLiked.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnPlayrandomLiked.MouseState = MaterialSkin.MouseState.HOVER;
-            this.btnPlayrandomLiked.Name = "btnPlayrandomLiked";
-            this.btnPlayrandomLiked.Primary = true;
-            this.btnPlayrandomLiked.Size = new System.Drawing.Size(141, 36);
-            this.btnPlayrandomLiked.TabIndex = 6;
-            this.btnPlayrandomLiked.Text = "Play random";
-            this.btnPlayrandomLiked.UseVisualStyleBackColor = true;
-            this.btnPlayrandomLiked.Click += new System.EventHandler(this.btnPlayrandomLiked_Click);
-            // 
-            // btnPrevLikedwads
-            // 
-            this.btnPrevLikedwads.AutoSize = true;
-            this.btnPrevLikedwads.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnPrevLikedwads.Depth = 0;
-            this.btnPrevLikedwads.Icon = null;
-            this.btnPrevLikedwads.Location = new System.Drawing.Point(23, 315);
-            this.btnPrevLikedwads.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnPrevLikedwads.MouseState = MaterialSkin.MouseState.HOVER;
-            this.btnPrevLikedwads.Name = "btnPrevLikedwads";
-            this.btnPrevLikedwads.Primary = true;
-            this.btnPrevLikedwads.Size = new System.Drawing.Size(31, 36);
-            this.btnPrevLikedwads.TabIndex = 4;
-            this.btnPrevLikedwads.Text = "<";
-            this.btnPrevLikedwads.UseVisualStyleBackColor = true;
-            this.btnPrevLikedwads.Click += new System.EventHandler(this.btnPrevLikedwads_Click);
-            // 
-            // btnNextLikedwads
-            // 
-            this.btnNextLikedwads.AutoSize = true;
-            this.btnNextLikedwads.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnNextLikedwads.Depth = 0;
-            this.btnNextLikedwads.Icon = null;
-            this.btnNextLikedwads.Location = new System.Drawing.Point(225, 315);
-            this.btnNextLikedwads.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnNextLikedwads.MouseState = MaterialSkin.MouseState.HOVER;
-            this.btnNextLikedwads.Name = "btnNextLikedwads";
-            this.btnNextLikedwads.Primary = true;
-            this.btnNextLikedwads.Size = new System.Drawing.Size(31, 36);
-            this.btnNextLikedwads.TabIndex = 5;
-            this.btnNextLikedwads.Text = ">";
-            this.btnNextLikedwads.UseVisualStyleBackColor = true;
-            this.btnNextLikedwads.Click += new System.EventHandler(this.btnNextLikedwads_Click);
-            // 
             // materialTabSelector1
             // 
             this.materialTabSelector1.BaseTabControl = this.tabControl1;
             this.materialTabSelector1.Depth = 0;
             this.materialTabSelector1.Location = new System.Drawing.Point(-3, 25);
-            this.materialTabSelector1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.materialTabSelector1.Margin = new System.Windows.Forms.Padding(4);
             this.materialTabSelector1.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialTabSelector1.Name = "materialTabSelector1";
             this.materialTabSelector1.Size = new System.Drawing.Size(933, 54);
@@ -815,6 +807,7 @@ namespace Doomroulette
             this.ClientSize = new System.Drawing.Size(933, 766);
             this.Controls.Add(this.materialTabSelector1);
             this.Controls.Add(this.tabControl1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.MaximizeBox = false;
             this.Name = "frmMain";
@@ -834,7 +827,8 @@ namespace Doomroulette
             this.grpGames.ResumeLayout(false);
             this.grpGames.PerformLayout();
             this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
             this.groupBox3.ResumeLayout(false);
@@ -853,10 +847,8 @@ namespace Doomroulette
         private MaterialTabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.ListBox listDislikedWads;
-        private System.Windows.Forms.ListBox listLikedWads;
+        private System.Windows.Forms.ListBox listPlayedWads;
         private System.Windows.Forms.GroupBox grpGames;
         private System.Windows.Forms.DateTimePicker createdDate;
         private System.Windows.Forms.ListBox lstAdditionalWads;
@@ -881,15 +873,17 @@ namespace Doomroulette
         private MaterialRaisedButton btnAddWad;
         private MaterialRaisedButton btnPlayselected;
         private MaterialRaisedButton btnShowInfo;
-        private MaterialRaisedButton btnMoveRight;
-        private MaterialRaisedButton btnMoveLeft;
         private MaterialRaisedButton btnPlayrandomLiked;
-        private MaterialRaisedButton btnNextLikedwads;
-        private MaterialRaisedButton btnPrevLikedwads;
-        private MaterialRaisedButton btnPlayrandomDisliked;
-        private MaterialRaisedButton btnNextDislikedwads;
-        private MaterialRaisedButton btnPrevDislikedwads;
+        private MaterialRaisedButton btnNextWads;
+        private MaterialRaisedButton btnPreviousWads;
+        private MaterialCheckBox chkFilterLiked;
+        private System.Windows.Forms.GroupBox groupBox5;
         private MaterialRaisedButton btnDelete;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private MaterialCheckBox chkFilterUnrated;
+        private MaterialCheckBox chkFilterDisliked;
+        private MaterialRaisedButton btnRateWad;
+        private System.Windows.Forms.Label lblPages;
     }
 }
 

@@ -64,6 +64,11 @@ namespace Doomroulette
                                             `wadInfoID`	INTEGER,
                                             `date`  TEXT
                                         );";
+                string unratedWadIds = @"CREATE TABLE `UnratedWadIds` (
+	                                        `id` INTEGER PRIMARY KEY AUTOINCREMENT,
+                                            `wadInfoID`	INTEGER,
+                                            `date`  TEXT
+                                        );";
 
                 string additionalWads = @"CREATE TABLE `AdditionalWads` (
 	                                        `id` INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -77,6 +82,8 @@ namespace Doomroulette
                 sqlite_cmd.CommandText = likedWadIds;
                 sqlite_cmd.ExecuteNonQuery();
                 sqlite_cmd.CommandText = dislikedWadIds;
+                sqlite_cmd.ExecuteNonQuery();
+                sqlite_cmd.CommandText = unratedWadIds;
                 sqlite_cmd.ExecuteNonQuery();
                 sqlite_cmd.CommandText = additionalWads;
                 sqlite_cmd.ExecuteNonQuery();
@@ -360,6 +367,27 @@ namespace Doomroulette
             sqlite_conn.Close();
         }
 
+        
+        public void saveUnratedWadId(int id)
+        {
+            string query = "INSERT INTO UnratedWadIds(wadInfoID, date) VALUES(@id, @datetime);";
+
+            SQLiteConnection sqlite_conn =
+                new SQLiteConnection(connectionString);
+            sqlite_conn.Open();
+
+            using (var cmd = new SQLiteCommand(sqlite_conn))
+            using (var transaction = sqlite_conn.BeginTransaction())
+            {
+                cmd.CommandText = query;
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@datetime", DateTime.Now.ToString());
+                cmd.ExecuteNonQuery();
+                transaction.Commit();
+
+            }
+            sqlite_conn.Close();
+        }
         public AdditionalWad[] getAdditionalWads()
         {
             List<AdditionalWad> foundWads = new List<AdditionalWad>();
@@ -522,6 +550,53 @@ namespace Doomroulette
             return foundWadInfos.ToArray();
         }
 
+        public WadInfo[] getUnratedWads()
+        {
+            List<WadInfo> foundWadInfos = new List<WadInfo>();
+            using (SQLiteConnection connect = new SQLiteConnection(connectionString))
+            {
+                connect.Open();
+                using (SQLiteCommand fmd = connect.CreateCommand())
+                {
+                    fmd.CommandText = @"select * from CachedWadInfo join UnratedWadIds on UnratedWadIds.wadInfoID = CachedWadInfo.id order by title asc";
+                    SQLiteDataReader content = fmd.ExecuteReader();
+                    while (content.Read())
+                    {
+
+                        foundWadInfos.Add(new WadInfo()
+                        {
+                            content = new Content()
+                            {
+                                id = Convert.ToInt32(content["id"]),
+                                title = Convert.ToString(content["title"]),
+                                dir = Convert.ToString(content["dir"]),
+                                filename = Convert.ToString(content["filename"]),
+                                size = Convert.ToInt64(content["size"]),
+                                age = Convert.ToDateTime(content["age"]),
+                                date = Convert.ToString(content["date"]),
+                                author = Convert.ToString(content["author"]),
+                                email = Convert.ToString(content["email"]),
+                                description = Convert.ToString(content["description"]),
+                                credits = Convert.ToString(content["credits"]),
+                                buildtime = Convert.ToString(content["buildtime"]),
+                                editors = Convert.ToString(content["editors"]),
+                                bugs = Convert.ToString(content["bugs"]),
+                                textfile = Convert.ToString(content["textfile"]),
+                                rating = Convert.ToSingle(content["rating"]),
+                                votes = Convert.ToInt32(content["votes"]),
+                                url = Convert.ToString(content["url"]),
+                                idgamesurl = Convert.ToString(content["idgamesurl"]),
+                                _base = Convert.ToString(content["_base"])
+                            }
+                        });
+                    }
+
+                }
+                connect.Close();
+            }
+            return foundWadInfos.ToArray();
+        }
+
         public void deleteLikedWad(long wadInfoID)
         {
             SQLiteConnection sqlite_conn =
@@ -547,6 +622,24 @@ namespace Doomroulette
             sqlite_conn.Open();
 
             string query = "DELETE FROM `DislikedWadIds` WHERE wadInfoID = @wadInfoID";
+            using (var cmd = new SQLiteCommand(sqlite_conn))
+            using (var transaction = sqlite_conn.BeginTransaction())
+            {
+                cmd.CommandText = query;
+                cmd.Parameters.AddWithValue("@wadInfoID", wadInfoID);
+                cmd.ExecuteNonQuery();
+                transaction.Commit();
+            }
+            sqlite_conn.Close();
+        }
+
+        public void deleteUnratedWad(long wadInfoID)
+        {
+            SQLiteConnection sqlite_conn =
+                new SQLiteConnection(connectionString);
+            sqlite_conn.Open();
+
+            string query = "DELETE FROM `UnratedWadIds` WHERE wadInfoID = @wadInfoID";
             using (var cmd = new SQLiteCommand(sqlite_conn))
             using (var transaction = sqlite_conn.BeginTransaction())
             {

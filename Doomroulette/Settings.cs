@@ -52,6 +52,9 @@ namespace Doomroulette
                 configValues["chkIncludeMegawads"] = "True";
                 configValues["chkIncludePorts"] = "True";
                 configValues["chkIncludeVanilla"] = "True";
+                configValues["chkFilterLiked"] = "True";
+                configValues["chkFilterDisliked"] = "True";
+                configValues["chkFilterUnrated"] = "True";
                 saveConfigFile();
             }
 

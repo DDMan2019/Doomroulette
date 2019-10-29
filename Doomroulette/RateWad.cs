@@ -18,7 +18,7 @@ namespace Doomroulette
 
         public RatingTypes rating = RatingTypes.Unrated;
         public int wadId;
-
+       
         public RateWad(WadInfo wadinfo)
         {
             InitializeComponent();
@@ -48,5 +48,6 @@ namespace Doomroulette
             rating = RatingTypes.Disliked;
             Close();
         }
+
     }
 }

@@ -136,7 +136,6 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="Icon.ico" />
-    <Content Include="output-onlinepngtools.ico" />
     <None Include="Resources\icon.ico" />
     <Content Include="Resources\ic_thumb_down_3x.png" />
     <Content Include="Resources\ic_thumb_up_3x.png" />
