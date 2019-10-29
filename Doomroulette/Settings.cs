@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MaterialSkin;
+using MaterialSkin.Controls;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,16 +14,23 @@ using System.Windows.Forms;
 
 namespace Doomroulette
 {
-    public partial class Settings : Form
+    public partial class Settings : MaterialForm
     {
+        private readonly MaterialSkinManager materialSkinManager;
+
         public Settings(bool willShowcontrolbox)
         {
+            materialSkinManager = MaterialSkinManager.Instance;
+            materialSkinManager.AddFormToManage(this);
+            materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
+            materialSkinManager.ColorScheme = new ColorScheme(Primary.BlueGrey800, Primary.BlueGrey900, Primary.BlueGrey500, Accent.LightBlue200, TextShade.WHITE);
+
             InitializeComponent();
             this.ControlBox = willShowcontrolbox;
         }
 
         private static Dictionary<string, string> configField;
-
+        
         public static Dictionary<string, string> configValues
         {
             get
@@ -43,6 +52,9 @@ namespace Doomroulette
                 configValues["chkIncludeMegawads"] = "True";
                 configValues["chkIncludePorts"] = "True";
                 configValues["chkIncludeVanilla"] = "True";
+                configValues["chkFilterLiked"] = "True";
+                configValues["chkFilterDisliked"] = "True";
+                configValues["chkFilterUnrated"] = "True";
                 saveConfigFile();
             }
 
@@ -125,10 +137,9 @@ namespace Doomroulette
 
         private void updateTextField(string name, string value)
         {
-            TextBox text = (TextBox)this.Controls.Find(name, true)[0];
+            MaterialSingleLineTextField text = (MaterialSingleLineTextField)this.Controls.Find(name, true)[0];
             text.Text = value;
             text.SelectionStart = text.Text.Length;
-            text.ScrollToCaret();
             text.Refresh();
         }
 

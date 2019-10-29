@@ -14,75 +14,8 @@ namespace Doomroulette
     
     static class IdGamesApi
     {
-        //https://www.doomworld.com/idgames/api/
-        //ftp://archives.gamers.org/pub/games/doom2/levels/doom2/megawads/
-        private static readonly HttpClient client = new HttpClient();
         private static string idUrl = "https://www.doomworld.com/idgames/api/api.php";
         
-
-        public static WadInfo getWadInfo(int id)
-        {
-            string action = String.Format("?action=get&id={0}&out=json",id);
-            using (var webClient = new WebClient())
-            {
-                string rawJson = webClient.DownloadString(idUrl + action);
-                var json = JObject.Parse(rawJson);
-                if(json["content"] != null)
-                {
-                    var content = json["content"];
-                    var reviewsjson = content["reviews"];
-                    var reviews = reviewsjson["review"];
-                    List<Review> foundRewievs = new List<Review>();
-                    foreach(var review in reviews)
-                    {
-                        string _text = (string)review["text"];
-                        foundRewievs.Add(new Review()
-                        {
-                            text = (string)review["text"],
-                            vote = (int) review["vote"],
-                            username = (string)review["username"]
-                        });
-                    }
-                    
-                    WadInfo wadInfo = new WadInfo()
-                    {
-                        content = new Content()
-                        {
-                            id = (int)content["id"],
-                            title = (string)content["title"],
-                            dir = (string)content["dir"],
-                            filename = (string)content["filename"],
-                            size = (long)content["size"],
-                            age = Helpers.FromUnixTime((long)content["age"]),
-                            date = (string)content["date"],
-                            author = (string)content["author"],
-                            email = (string)content["email"],
-                            description = (string)content["description"],
-                            credits = (string)content["credits"],
-                            buildtime = (string)content["buildtime"],
-                            editors = (string)content["editors"],
-                            bugs = (string)content["bugs"],
-                            textfile = (string)content["textfile"],
-                            rating = (float)content["rating"],
-                            votes = (int)content["votes"],
-                            url = (string)content["url"],
-                            idgamesurl = (string)content["idgamesurl"],
-                            reviews = foundRewievs.ToArray(),
-                            _base = (string)content["base"],
-
-                        }
-                    };
-
-                    return wadInfo;
-                } else {
-                    return null;
-                }
-
-                
-            }
-
-        }
-
         public static WadInfo[] getWads(string[] directories)
         {
             List<WadInfo> foundWads = new List<WadInfo>();

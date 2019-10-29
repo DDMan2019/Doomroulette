@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Doomroulette
 {
     class Helpers
     {
-        public static DateTime today = DateTime.Today;
-
+        
         public static DateTime FromUnixTime(long unixTime)
         {
             return epoch.AddSeconds(unixTime);
@@ -29,29 +24,6 @@ namespace Doomroulette
                 
             return true;
         }
-
-        public static void log(string str)
-        {
-            try
-            {
-                Console.WriteLine(today + ": " + str);
-                if (!Directory.Exists("logs"))
-                {
-                    Directory.CreateDirectory("logs");
-                }
-
-                StringBuilder sb = new StringBuilder();
-                sb.AppendLine(today + ": " + str);
-                string filename = "logs/log" + today.ToString("yyyyMMdd") + ".txt";
-
-                File.AppendAllText(filename, sb.ToString());
-                sb.Clear();
-            }
-            catch (Exception e)
-            {
-                log(str);
-            }
-
-        }
+       
     }
 }

@@ -1,11 +1,8 @@
 ﻿using Doomroulette.Models;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -14,25 +11,39 @@ using System.Windows.Forms;
 using System.Threading;
 using static Doomroulette.RateWad;
 using System.Diagnostics;
-
+using MaterialSkin.Controls;
+using MaterialSkin;
+using Doomroulette.Properties;
+/*
+* form size is : 586, 472
+*/
 namespace Doomroulette
 {
-    public partial class frmMain : Form
+    public partial class frmMain : MaterialForm
     {
         private bool willDownloadNewWad = true;
         private Thread randomWadThread = null;
         delegate void StringArgReturningVoidDelegate(string text);
         
-        private WadHistoryList likedWads;
-        private WadHistoryList dislikedWads;
+        private WadHistoryList wadHistoryList;
 
         private WadManager wadManager;
         private List<AdditionalWad> additionalWads;
+        private readonly MaterialSkinManager materialSkinManager;
 
         public frmMain()
         {
-            InitializeComponent();
+            materialSkinManager = MaterialSkinManager.Instance;
+            materialSkinManager.AddFormToManage(this);
+            materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
+            materialSkinManager.ColorScheme = new ColorScheme(Primary.BlueGrey800, Primary.BlueGrey900, Primary.BlueGrey500, Accent.LightBlue200, TextShade.WHITE);
             
+            InitializeComponent();
+
+            chkFilterLiked.SkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
+            chkFilterDisliked.SkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
+            chkFilterUnrated.SkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
+
             wadManager = new WadManager();
             
             if (wadManager.missingExecutablePath())
@@ -65,65 +76,61 @@ namespace Doomroulette
 
         private void populateHistoryList()
         {
-            listLikedWads.Items.Clear();
-            listDislikedWads.Items.Clear();
-            if (likedWads == null)
+            listPlayedWads.Items.Clear();
+            
+            WadInfo[] likedWads = chkFilterLiked.Checked ? wadManager.getLikedWads() : new WadInfo[0];
+            WadInfo[] dislikedWads = chkFilterDisliked.Checked ? wadManager.getDislikedWads() : new WadInfo[0];
+            WadInfo[] unratedWads = chkFilterUnrated.Checked ? wadManager.getUnratedWads() : new WadInfo[0];
+            WadInfo[] allWads = likedWads.Concat(dislikedWads.Concat(unratedWads)).ToArray();
+
+            if (wadHistoryList == null)
             {
-                likedWads = new WadHistoryList(wadManager.getLikedWads());
+                wadHistoryList = new WadHistoryList(allWads);
+                updateLblPages();
             }
-            if (dislikedWads == null)
-            {
-                dislikedWads = new WadHistoryList(wadManager.getDislikedWads());
-            }
+            
             if (!wadManager.emptyDb())
             {
-               
-
-                if(likedWads.wads == null)
+                if(wadHistoryList.wads == null)
                 {
-                    likedWads.setWads(wadManager.getLikedWads());
+                    wadHistoryList.setWads(allWads);
                 }
-                if (dislikedWads.wads == null)
+                if(wadHistoryList.wadPages.Count > 0)
                 {
-                    dislikedWads.setWads(wadManager.getDislikedWads());
+                    listPlayedWads.Items.AddRange(wadHistoryList.wadPages[wadHistoryList.currentPage - 1].Select(a => a.content.title).ToArray());
                 }
-
-                listLikedWads.Items.AddRange(likedWads.currentShownItems.Select(a => a.content.title).ToArray());
-                listDislikedWads.Items.AddRange(dislikedWads.currentShownItems.Select(a => a.content.title).ToArray());
-
+                updateLblPages();
             }
         }
 
         private void refreshHistoryList()
         {
-            likedWads.wads = null;
-            dislikedWads.wads = null;
+            if (wadHistoryList != null)
+            {
+                wadHistoryList.wads = null;
+            }
             populateHistoryList();
+        }
+
+        private void updateLblPages()
+        {
+            lblPages.Text = string.Format("Page: {0}/{1}", wadHistoryList.currentPage, wadHistoryList.wadPages.Count());
         }
 
         private void btnPrevLikedwads_Click(object sender, EventArgs e)
         {
-            likedWads.previous();
-            populateHistoryList();
+            wadHistoryList.previous();
+            listPlayedWads.Items.Clear();
+            listPlayedWads.Items.AddRange(wadHistoryList.wadPages[wadHistoryList.currentPage - 1].Select(a => a.content.title).ToArray());
+            updateLblPages();
         }
 
         private void btnNextLikedwads_Click(object sender, EventArgs e)
         {
-            likedWads.next();
-            populateHistoryList();
-        }
-
-
-        private void btnPrevDislikedwads_Click(object sender, EventArgs e)
-        {
-            dislikedWads.previous();
-            populateHistoryList();
-        }
-
-        private void btnNextDislikedwads_Click(object sender, EventArgs e)
-        {
-            dislikedWads.next();
-            populateHistoryList();
+            wadHistoryList.next();
+            listPlayedWads.Items.Clear();
+            listPlayedWads.Items.AddRange(wadHistoryList.wadPages[wadHistoryList.currentPage - 1].Select(a => a.content.title).ToArray());
+            updateLblPages();
         }
 
         private void populateSettings()
@@ -144,6 +151,11 @@ namespace Doomroulette
             wadManager.doompath = Settings.configValues["doompath"];
 
             numMinrating.Value = (decimal) wadManager.settings.minimumRating;
+
+            chkFilterLiked.Checked = Settings.configValues.ContainsKey("chkFilterLiked") ? Settings.configValues["chkFilterLiked"] == "True" : true;
+            chkFilterDisliked.Checked = Settings.configValues.ContainsKey("chkFilterDisliked") ? Settings.configValues["chkFilterDisliked"] == "True" : false;
+            chkFilterUnrated.Checked = Settings.configValues.ContainsKey("chkFilterUnrated") ? Settings.configValues["chkFilterUnrated"] == "True" : false;
+
             setSkill(Settings.configValues["skill"]);
             setGame(Settings.configValues["game"]);
         }
@@ -252,20 +264,18 @@ namespace Doomroulette
                     SetText("Starting up Doom");
 
                     Process process = wadManager.startDoom(Path.GetFileNameWithoutExtension(wadManager.currentFile), files, additionalWads.ToArray());
-                    
+                    string[] statusMessages = new string[] { "Rip and tear until its done!", "Slayer has entered the facility!", "Demonic presence at unsafe levels!", "IDDQD" };
+                    SetText(statusMessages[new Random().Next(0, statusMessages.Length)]);
                     process.WaitForExit();
 
                     this.Invoke((MethodInvoker)delegate {
                         RateWad wadrating = new RateWad(chosenWad);
                         DialogResult dr = wadrating.ShowDialog(this);
                         enableButtons();
-                        if (wadrating.rating == RatingTypes.Unrated)
-                            return;
-
-                        wadManager.setWadRating(chosenWad.content.id, wadrating.rating == RatingTypes.Liked);
+                       
+                        wadManager.setWadRating(chosenWad.content.id, wadrating.rating);
 
                         refreshHistoryList();
-                        
                     });
                 }
                 else
@@ -322,15 +332,6 @@ namespace Doomroulette
                 this.btnPlayrandomLiked.Enabled = true;
             }
 
-            if (this.btnPlayrandomDisliked.InvokeRequired)
-            {
-                BeginInvoke((Action)delegate () { this.btnPlayrandomDisliked.Enabled = true; });
-            }
-            else
-            {
-                this.btnPlayrandomDisliked.Enabled = true;
-            }
-
             if (this.btnPlayselected.InvokeRequired)
             {
                 BeginInvoke((Action)delegate () { this.btnPlayselected.Enabled = true; });
@@ -381,15 +382,6 @@ namespace Doomroulette
                 this.btnPlayrandomLiked.Enabled = false;
             }
 
-            if (this.btnPlayrandomDisliked.InvokeRequired)
-            {
-                BeginInvoke((Action)delegate () { this.btnPlayrandomDisliked.Enabled = false; });
-            }
-            else
-            {
-                this.btnPlayrandomDisliked.Enabled = false;
-            }
-
             if (this.btnPlayselected.InvokeRequired)
             {
                 BeginInvoke((Action)delegate () { this.btnPlayselected.Enabled = false; });
@@ -408,6 +400,60 @@ namespace Doomroulette
                 this.btnShowInfo.Enabled = false;
             }
 
+            if (this.btnPreviousWads.InvokeRequired)
+            {
+                BeginInvoke((Action)delegate () { this.btnPreviousWads.Enabled = false; });
+            }
+            else
+            {
+                this.btnPreviousWads.Enabled = false;
+            }
+
+            if (this.btnNextWads.InvokeRequired)
+            {
+                BeginInvoke((Action)delegate () { this.btnNextWads.Enabled = false; });
+            }
+            else
+            {
+                this.btnNextWads.Enabled = false;
+            }
+
+            if (this.btnPlayrandomLiked.InvokeRequired)
+            {
+                BeginInvoke((Action)delegate () { this.btnPlayrandomLiked.Enabled = false; });
+            }
+            else
+            {
+                this.btnPlayrandomLiked.Enabled = false;
+            }
+
+            if (this.btnDelete.InvokeRequired)
+            {
+                BeginInvoke((Action)delegate () { this.btnDelete.Enabled = false; });
+            }
+            else
+            {
+                this.btnDelete.Enabled = false;
+            }
+
+            if (this.btnRateWad.InvokeRequired)
+            {
+                BeginInvoke((Action)delegate () { this.btnRateWad.Enabled = false; });
+            }
+            else
+            {
+                this.btnRateWad.Enabled = false;
+            }
+
+            if (this.btnDelete.InvokeRequired)
+            {
+                BeginInvoke((Action)delegate () { this.btnDelete.Enabled = false; });
+            }
+            else
+            {
+                this.btnDelete.Enabled = false;
+            }
+         
         }
 
         private void SetText(string text)
@@ -507,9 +553,9 @@ namespace Doomroulette
         {
             createdDate.ValueChanged += new System.EventHandler(createdDate_ValueChanged); 
             createdDate.Value = Settings.configValues.ContainsKey("createdDate") ? DateTime.Parse(Settings.configValues["createdDate"]) : DateTime.Parse("1994-09-30");
-            createdDate.MinDate = DateTime.Parse("1994-09-30");
+            createdDate.MinDate = DateTime.Parse("1993-12-10");
             createdDate.MaxDate = DateTime.Today;
-
+            
             bool enableCreatedDate = Settings.configValues.ContainsKey("enableCreatedDate") ? Settings.configValues["enableCreatedDate"] == "True" : false;
             createdDate.Enabled = enableCreatedDate;
             chkEnableDate.Checked = enableCreatedDate;
@@ -520,19 +566,10 @@ namespace Doomroulette
             int selectedIndex = -1;
             WadInfo chosenWad;
             string currentFile = "";
-            if (listLikedWads.SelectedIndex != -1)
+            if (listPlayedWads.SelectedIndex != -1)
             {
-                selectedIndex = listLikedWads.SelectedIndex;
-                chosenWad = likedWads.currentShownItems[selectedIndex];
-                currentFile = Path.GetFileNameWithoutExtension(chosenWad.content.filename);
-                wadManager.currentFile = currentFile;
-
-            }
-            else if (listDislikedWads.SelectedIndex != -1)
-            {
-
-                selectedIndex = listDislikedWads.SelectedIndex;
-                chosenWad = dislikedWads.currentShownItems[selectedIndex];
+                selectedIndex = listPlayedWads.SelectedIndex;
+                chosenWad = wadHistoryList.wadPages[wadHistoryList.currentPage - 1][selectedIndex];
                 currentFile = Path.GetFileNameWithoutExtension(chosenWad.content.filename);
                 wadManager.currentFile = currentFile;
 
@@ -543,18 +580,16 @@ namespace Doomroulette
                 string[] files = wadManager.getFiles(wadManager.downloadedWadsFolder + "/" + currentFile);
                 wadManager.startDoom(Path.GetFileNameWithoutExtension(wadManager.currentFile), files, additionalWads.ToArray());
             }
-
-
         }
 
         private void btnPlayrandomLiked_Click(object sender, EventArgs e)
         {  
-            if (likedWads.wads.Length == 0) return;
-            int selectedIndex = new Random().Next(0,likedWads.wads.Length);
+            if (wadHistoryList.wads.Length == 0) return;
+            int selectedIndex = new Random().Next(0, wadHistoryList.wads.Length);
             WadInfo chosenWad;
             string currentFile = "";
 
-            chosenWad = likedWads.wads[selectedIndex];
+            chosenWad = wadHistoryList.wads[selectedIndex];
             currentFile = Path.GetFileNameWithoutExtension(chosenWad.content.filename);
             wadManager.currentFile = currentFile;
 
@@ -562,20 +597,7 @@ namespace Doomroulette
             wadManager.startDoom(Path.GetFileNameWithoutExtension(wadManager.currentFile), files, additionalWads.ToArray());
         }
 
-        private void btnPlayrandomDisliked_Click(object sender, EventArgs e)
-        {
-            if (dislikedWads.wads.Length == 0) return;
-            int selectedIndex = new Random().Next(0, dislikedWads.wads.Length);
-            WadInfo chosenWad;
-            string currentFile = "";
-
-            chosenWad = dislikedWads.wads[selectedIndex];
-            currentFile = Path.GetFileNameWithoutExtension(chosenWad.content.filename);
-            wadManager.currentFile = currentFile;
-
-            string[] files = wadManager.getFiles(wadManager.downloadedWadsFolder + "/" + currentFile);
-            wadManager.startDoom(Path.GetFileNameWithoutExtension(wadManager.currentFile), files, additionalWads.ToArray());
-        }
+        
         
         private void btnAdvancedSettings_Click(object sender, EventArgs e)
         {
@@ -647,11 +669,12 @@ namespace Doomroulette
 
         private void btnShowInfo_Click(object sender, EventArgs e)
         {
-            bool isLikedWad = listLikedWads.SelectedIndex != -1 ? true : false;
-            int selectedIndex = isLikedWad ? listLikedWads.SelectedIndex : listDislikedWads.SelectedIndex;
-            if(selectedIndex != -1)
+            int selectedIndex = listPlayedWads.SelectedIndex;
+
+            if (selectedIndex != -1)
             {
-                WadInfo selectedWad = isLikedWad ? likedWads.currentShownItems[selectedIndex] : dislikedWads.currentShownItems[selectedIndex];
+                WadInfo selectedWad = wadHistoryList.wadPages[wadHistoryList.currentPage - 1][selectedIndex];
+
                 try
                 {
                     wadManager.openTextFile(selectedWad);
@@ -660,16 +683,6 @@ namespace Doomroulette
                     MessageBox.Show(ex.Message);
                 }
             }
-        }
-
-        private void listDislikedWads_MouseClick(object sender, MouseEventArgs e)
-        {
-            listLikedWads.SelectedIndex = -1;
-        }
-
-        private void listLikedWads_MouseClick(object sender, MouseEventArgs e)
-        {
-            listDislikedWads.SelectedIndex = -1;
         }
 
         private void btnAddWad_Click(object sender, EventArgs e)
@@ -699,7 +712,7 @@ namespace Doomroulette
         private void btnRemoveWad_Click(object sender, EventArgs e)
         {
             int selectedIndex = lstAdditionalWads.SelectedIndex;
-            if(selectedIndex != -1)
+            if(selectedIndex > -1)
             {
                 AdditionalWad toRemove = additionalWads[selectedIndex];
                 wadManager.deleteAdditionalWad(toRemove.ID);
@@ -710,47 +723,44 @@ namespace Doomroulette
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            bool isLikedWad = listLikedWads.SelectedIndex != -1 ? true : false;
-            int selectedIndex = isLikedWad ? listLikedWads.SelectedIndex : listDislikedWads.SelectedIndex;
-            if (selectedIndex < 0) return;
-
-            WadInfo wadToDelete;
-            if (isLikedWad)
+            int selectedIndex = listPlayedWads.SelectedIndex;
+            if (selectedIndex > -1)
             {
-                wadToDelete = likedWads.currentShownItems[selectedIndex];
-                wadManager.deleteLikedWad(wadToDelete);
-            } else
-            {
-                wadToDelete = dislikedWads.currentShownItems[selectedIndex];
-                wadManager.deleteDislikedWad(wadToDelete);
+                WadInfo wadToDelete = wadHistoryList.wadPages[wadHistoryList.currentPage - 1][selectedIndex];
+                wadManager.deleteWad(wadToDelete);
+                wadHistoryList.wads = null;
+                refreshHistoryList();
             }
+        }
+
+        private void filterChanged(object sender, EventArgs e)
+        {
+            string chbxName = ((CheckBox)sender).Name;
+            CheckBox checkbox = (CheckBox)this.Controls.Find(chbxName, true)[0];
+            Settings.configValues[chbxName] = checkbox.Checked.ToString();
+            Settings.saveConfigFile();
             refreshHistoryList();
         }
 
-        private void btnMoveLeft_Click(object sender, EventArgs e)
+        private void BtnRateWad_Click(object sender, EventArgs e)
         {
-            bool isDislikedWad = listDislikedWads.SelectedIndex != -1 ? true : false;
-            int selectedIndex = listDislikedWads.SelectedIndex;
-            if(selectedIndex > -1)
-            {
-                WadInfo wadInfo = dislikedWads.currentShownItems[selectedIndex];
-                wadManager.deleteDislikedWad(wadInfo, false);
-                wadManager.setWadRating(wadInfo.content.id, true);
-                refreshHistoryList();
-            }
-        }
-
-        private void btnMoveRight_Click(object sender, EventArgs e)
-        {
-            bool isDislikedWad = listLikedWads.SelectedIndex != -1 ? true : false;
-            int selectedIndex = listLikedWads.SelectedIndex;
+            
+            int selectedIndex = listPlayedWads.SelectedIndex;
             if (selectedIndex > -1)
             {
-                WadInfo wadInfo = likedWads.currentShownItems[selectedIndex];
-                wadManager.deleteLikedWad(wadInfo, false);
-                wadManager.setWadRating(wadInfo.content.id, false);
-                refreshHistoryList();
+                WadInfo chosenWad = wadHistoryList.wadPages[wadHistoryList.currentPage - 1][selectedIndex];
+
+                this.Invoke((MethodInvoker)delegate {
+                    RateWad wadrating = new RateWad(chosenWad);
+                    DialogResult dr = wadrating.ShowDialog(this);
+                    enableButtons();
+
+                    wadManager.setWadRating(chosenWad.content.id, wadrating.rating);
+                    wadHistoryList.wads = null;
+                    refreshHistoryList();
+                });
             }
+
         }
     }
 }

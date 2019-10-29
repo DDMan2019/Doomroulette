@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using static Doomroulette.RateWad;
 
 namespace Doomroulette
 {
@@ -20,11 +21,8 @@ namespace Doomroulette
         public string doompath; //@"E:\Games\Doom\gzdoom.exe";
         public string downloadedWadsFolder;
 
-        private string sourcePort = "gzdoom.exe";
-        private string folder = @"\downloadedWads\";
         private string folderPath = @"/pc/games/idgames/";
 
-        //private string folderPath = @"/pub/games/doom2/";
         private Db db;
         public string currentFile;
         
@@ -40,8 +38,6 @@ namespace Doomroulette
             sk_hard = 4,
             sk_nightmare = 5
         };
-
-        
 
         public SelectedGame selectedGame = SelectedGame.Doom2;
         public enum SelectedGame
@@ -75,13 +71,10 @@ namespace Doomroulette
             }
         }
 
-        public Action<string> callback;
-
         public async Task<string> downloadWad(WadInfo wad, Action<string> callback)
         {
             refreshSettings();
-            //this.callback = callback;
-            //string inputfilepath = doompath + folder + wad.content.filename;
+
             string destination = downloadedWadsFolder + "/" + wad.content.filename;
             string ftpfilepath = wad.content.dir + wad.content.filename;//"/Updater/Dir1/FileName.exe";
             string ftpfullpath = "ftp://" + ftphost + "/" + folderPath + ftpfilepath;
@@ -356,12 +349,25 @@ namespace Doomroulette
                 db.saveWadInfo(wadsToAdd);
         }
 
-        public void setWadRating(int wadId,bool liked)
+        public void setWadRating(int wadId, RatingTypes rating)
         {
-            if (liked)
+            if (rating == RatingTypes.Liked)
+            {
                 db.saveLikedWadId(wadId);
-            else
+                db.deleteDislikedWad(wadId);
+                db.deleteUnratedWad(wadId);
+            } else if (rating == RatingTypes.Disliked)
+            {
                 db.saveDislikedWadId(wadId);
+                db.deleteLikedWad(wadId);
+                db.deleteUnratedWad(wadId);
+            } else
+            {
+                db.saveUnratedWadId(wadId);
+                db.deleteLikedWad(wadId);
+                db.deleteDislikedWad(wadId);
+            }
+                
         }
 
         public WadInfo[] getLikedWads()
@@ -373,27 +379,18 @@ namespace Doomroulette
         {
             return db.getDisLikedWads();
         }
+        public WadInfo[] getUnratedWads()
+        {
+            return db.getUnratedWads();
+        }
 
-        public void deleteLikedWad(WadInfo wadInfo, bool deleteFile = true)
+        public void deleteWad(WadInfo wadInfo, bool deleteFile = true)
         {
             long wadIdToDelete = wadInfo.content.id;
             db.deleteLikedWad(wadIdToDelete);
-            if(deleteFile)
-            {
-                string folderToDelete = Path.GetFileNameWithoutExtension(wadInfo.content.filename);
-                if (Directory.Exists(downloadedWadsFolder + "/" + folderToDelete))
-                {
-                    Directory.Delete(downloadedWadsFolder + "/" + folderToDelete, true);
-                }
-                System.IO.File.Delete(downloadedWadsFolder + "/" + wadInfo.content.filename);
-            }
-        }
-
-        public void deleteDislikedWad(WadInfo wadInfo, bool deleteFile = true)
-        {
-            long wadIdToDelete = wadInfo.content.id;
             db.deleteDislikedWad(wadIdToDelete);
-            if(deleteFile)
+            db.deleteUnratedWad(wadIdToDelete);
+            if (deleteFile)
             {
                 string folderToDelete = Path.GetFileNameWithoutExtension(wadInfo.content.filename);
                 if (Directory.Exists(downloadedWadsFolder + "/" + folderToDelete))
@@ -401,10 +398,9 @@ namespace Doomroulette
                     Directory.Delete(downloadedWadsFolder + "/" + folderToDelete, true);
                 }
                 System.IO.File.Delete(downloadedWadsFolder + "/" + wadInfo.content.filename);
-
             }
         }
-
+        
         public AdditionalWad[] getAdditionalWads()
         {
             return db.getAdditionalWads();

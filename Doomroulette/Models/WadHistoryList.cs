@@ -9,65 +9,69 @@ namespace Doomroulette.Models
     class WadHistoryList
     {
         public int range = 15;
-
+        
         private int start = 0;
         private int end = 15;
 
         public WadInfo[] currentShownItems { get; set; }
         public WadInfo[] wads { get; set; }
 
-        public void setWads(WadInfo[] wads)
-        {
-            this.wads = wads;
-            
-            int myrange = (start + range) >= wads.Length ? wads.Length - start : range;
-            if(myrange == 0)
-            {
-                previous();
-                myrange = (start + range) >= wads.Length ? wads.Length - start : range;
-            }
-            else {
-            }
-            this.currentShownItems = new WadInfo[myrange];
-            Array.Copy(this.wads, start, this.currentShownItems, 0, myrange);
-        }
+        public List<List<WadInfo>> wadPages { get; private set; }
 
+        public int pages { get; set; }
+
+        public int currentPage { get; private set; }
         public WadHistoryList(WadInfo[] wads)
         {
             this.wads = wads;
-            int myrange = (start + range) >= wads.Length ? wads.Length - start : range;
-            this.currentShownItems = new WadInfo[myrange];
+            setPages();
+        }
 
-            Array.Copy(this.wads, start, this.currentShownItems, 0, myrange);
+        private void setPages()
+        {
+            start = 0;
+            end = range;
+            
+            WadInfo[] wads;
+            wadPages = new List<List<WadInfo>>();
+
+            int nPages = this.wads.Length / range + (this.wads.Length % range > 0 ? 1 : 0);
+
+            for (int i = 0; i < nPages; i++)
+            {
+                int myrange = (start + range) >= this.wads.Length ? this.wads.Length - start : range;
+                wads = new WadInfo[myrange];
+                Array.Copy(this.wads, start, wads, 0, myrange);
+                wadPages.Add(wads.ToList());
+
+                start += range;
+                end += myrange;
+            }
+            currentPage = wadPages.Count > 0 ? 1 : 0;
+        }
+
+        public void setWads(WadInfo[] wads)
+        {
+            this.wads = wads;
+            setPages();
         }
 
         public WadInfo[] next()
         {
-            if (start + range >= wads.Length) return null;
-
-            start += range;
-            int myrange = (start + range) >= wads.Length ? wads.Length - start: range;
-            end += myrange;
-            this.currentShownItems = new WadInfo[myrange];
-
-            Array.Copy(this.wads, start, this.currentShownItems, 0, myrange);
+            if (currentPage + 1 <= wadPages.Count)
+            {
+                currentPage++;
+            }
             return null;
         }
 
         public WadInfo[] previous()
         {
-            if (start - range < 0) return null;
-
-            start -= range;
-            this.currentShownItems = new WadInfo[range];
-
-            Array.Copy(this.wads, start, this.currentShownItems, 0, range);
+            if (currentPage - 1 > 0)
+            {
+                currentPage--;
+            }
             return null;
-        }
-
-        public bool empty()
-        {
-            return wads.Length == 0;
         }
         
     }
